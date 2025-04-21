@@ -116,7 +116,7 @@ df_prop %>%
 data$mar3  <- relevel(data$mar3,  ref = 1)
 data$kids3 <- relevel(data$kids3, ref = 3)
 
-
+## Models with expectations as controls
 polr2.sp.exp  <- polr(gdsp ~ year.c * sex + I(year.c^2) * sex + mar3 +
                        momed + race + region,
                      data = data, weights = svyweight, Hess = T)
@@ -180,3 +180,180 @@ table4 <- modelsummary(mods.4,
   add_footer_lines("Notes: 99,399")
 
 table4
+
+
+# Table 5 ----------------------------------------------------------------------
+
+## Now, let's subset the sample to only marital and parental expectations
+
+
+## Models with expectations as controls
+polr2.sp.mar  <- polr(gdsp ~ year.c * sex + I(year.c^2) * sex + 
+                        momed + race + region,
+                      data=subset(data, mar3=="Getting married"), weights = svyweight, Hess = T)
+
+polr2.pa.kids <- polr(gdpa ~ year.c * sex + I(year.c^2) * sex  +
+                        momed + race + region,
+                      data=subset(data, kids3=="Very likely"), weights = svyweight, Hess = T)
+
+## Turn into tidy dataframes
+tidySP.5 <- broom::tidy(polr2.sp.mar)
+tidyPA.5 <- broom::tidy(polr2.pa.kids)
+
+## Transform output
+tidySP.5 <- tidySP.5 %>%
+  mutate(z_scores = estimate/std.error,
+         p.value  = round(2 * (1 - pnorm(abs(z_scores))), 3),
+         estimate = case_when(
+           coef.type == "coefficient" ~ exp(estimate),
+           coef.type == "scale"       ~ estimate))
+
+tidyPA.5 <- tidyPA.5 %>%
+  mutate(z_scores = estimate/std.error,
+         p.value  = round(2 * (1 - pnorm(abs(z_scores))), 3),
+         estimate = case_when(
+           coef.type == "coefficient" ~ exp(estimate),
+           coef.type == "scale"       ~ estimate))
+
+
+## Turn into modelsummary objects
+modSP.5        <- list(tidy = tidySP.5)
+class(modSP.5) <- "modelsummary_list"
+
+modPA.5        <- list(tidy = tidyPA.5)
+class(modPA.5) <- "modelsummary_list"
+
+mods.5 <- list(
+  "Spouse" = modSP.5,
+  "Parent" = modPA.5)
+
+cm <- c('year.c'                             = 'Year',
+        'I(year.c^2)'                        = 'Year squared',
+        'sexWomen'                           = "Women",
+        'year.c:sexWomen'                    = 'Year * Women',
+        'sexWomen:I(year.c^2)'               = 'Year2 * Women',
+        'Poor|Not so good'                   = 'Poor|Not so good',
+        'Not so good|Fairly good'            = 'Not so good|Fairly good',
+        'Fairly good|Good'                   = 'Fairly good|Good',
+        'Good|Very good'                     = 'Good|Very good')
+
+table5 <- modelsummary(mods.5,
+                       shape = term ~ model + statistic,
+                       stars = c("*" =.05, "**" = .01, "***" = .001),
+                       coef_map = cm,
+                       fmt = fmt_decimal(digits = 3, pdigits = 3),
+                       output = "huxtable") %>%
+  huxtable::as_flextable()  %>%
+  add_footer_lines("Notes: 99,399")
+
+table5
+
+
+# Figure 3 ---------------------------------------------------------------------
+# sub-sample will marry & have kids
+
+## Average Predictions 
+pp_sp_sex_sub   <- predict_response(polr2.sp.mar, terms = c("year.c [all]", "sex"))
+pp_pa_sex_sub   <- predict_response(polr2.pa.kids, terms = c("year.c [all]", "sex"))
+
+## Combine dfs
+pp_sp_sex_sub$cat    <- "Spouse \n (think will marry)" 
+pp_pa_sex_sub$cat    <- "Parent \n (if marry, very likely have kids)" 
+
+df_pp_sex_sub <- rbind(pp_sp_sex_sub, pp_pa_sex_sub)
+
+## Tidy variables
+df_pp_sex_sub$response.level <- factor(df_pp_sex_sub$response.level, 
+                                   levels=c("Very good", 
+                                            "Good", 
+                                            "Fairly good", 
+                                            "Not so good", 
+                                            "Poor"))
+df_pp_sex_sub$cat <- factor(df_pp_sex_sub$cat, 
+                        levels=c("Spouse \n (think will marry)", 
+                                 "Parent \n (if marry, very likely have kids)"))
+
+lables_year <- c("1976", "1985", "1995", "2005", "2015", "2023")
+
+
+## Draw figure
+
+p2_sub <- df_pp_sex_sub %>%
+  ggplot(aes(x = x, y = predicted, color = response.level,
+             ymin = conf.low, ymax = conf.high)) +
+  #  geom_errorbar(width = 0.2, color="grey80") +
+  geom_line(aes(linetype = group), linewidth = 1) +
+  facet_wrap(~cat) +
+  theme_minimal() +
+  theme(#legend.position = c(1, 0),
+    #legend.justification = c(1, 0),
+    #   plot.title = element_text(face = "bold"),
+    legend.position  = "right",
+    strip.text.x     = element_text(face = "bold"),
+    panel.grid.minor = element_blank(),
+    panel.spacing    = unit(1.1, "cm", data = NULL)) +
+  scale_y_continuous(breaks = c(0., .25, .5, .75), limits=c(0, .75), labels = scales::percent) +
+  scale_x_continuous(breaks=c(-20.55, -11.55, -1.55, 8.45, 18.14, 26.45), labels = lables_year) +
+  labs( x        = " ", 
+        y        = " ",
+        color    = "Response level",
+        linetype = " ",
+        caption  = "Monitoring the Future 12th Grade Surveys (1976-2023)") 
+
+p2_sub
+
+
+## Combine plots
+
+## Combine dfs
+df_pp_sex$sample      <- "All" 
+df_pp_sex_sub$sample  <- "Sub" 
+
+df_pp_p3 <- rbind(df_pp_sex, df_pp_sex_sub)
+
+df_pp_p3$cat <- recode_factor(df_pp_p3$cat, Spouse = "Spouse \n (full sample)")
+df_pp_p3$cat <- recode_factor(df_pp_p3$cat, Parent = "Parent \n (full sample)")
+
+df_pp_p3$cat <- factor(df_pp_p3$cat, 
+                       levels=c(
+                         'Spouse \n (full sample)',
+                         'Spouse \n (think will marry)',
+                         'Parent \n (full sample)',
+                         'Parent \n (if marry, very likely have kids)'))
+
+p3 <- df_pp_p3 %>%
+  filter(cat != "Worker") %>%
+  ggplot(aes(x = x, y = predicted, color = response.level,
+             ymin = conf.low, ymax = conf.high)) +
+  #  geom_errorbar(width = 0.2, color="grey80") +
+  geom_line(aes(linetype = group), linewidth = 1) +
+  facet_wrap(~cat, ncol = 4) +
+  theme_minimal() +
+  theme(#legend.position = c(1, 0),
+    #legend.justification = c(1, 0),
+    #   plot.title = element_text(face = "bold"),
+    legend.position  = "right",
+    strip.text.x     = element_text(face = "bold"),
+    panel.grid.minor = element_blank(),
+    panel.spacing    = unit(1.1, "cm", data = NULL)) +
+  scale_y_continuous(breaks = c(0., .25, .5, .75), limits=c(0, .75), labels = scales::percent) +
+  scale_x_continuous(breaks=c(-20.55, -11.55, -1.55, 8.45, 18.14, 26.45), labels = lables_year) +
+  labs( 
+    title    = "% who think they will be ' __________' as a ____________",
+    subtitle = "for the full sample and only youth expecting to take on each role",
+    x        = " ", 
+    y        = " ",
+    color    = "Response level",
+    linetype = " ",
+    caption  = "Monitoring the Future 12th Grade Surveys (1976-2023)") 
+
+p3
+
+## Save Fig 3
+
+agg_tiff(filename = file.path(here(outDir, figDir), "fig3.tif"), 
+         width=9, height=6.5, units="in", res = 800, scaling = 1)
+
+plot(p3)
+invisible(dev.off())
+
