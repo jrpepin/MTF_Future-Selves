@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------------------
-# MTF POSSIBLE SELVES PROJECT
-# PS_00-1_setup and packages.R
+# MTF FUTURE SELVES PROJECT
+# FS_00-1_setup and packages.R
 # Joanna R. Pepin & Melissa Milkie
 #-------------------------------------------------------------------------------
 

@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------------------
-# MTF POSSIBLE SELVES PROJECT
-# PS_01_measures and sample.R
+# MTF FUTURE SELVES PROJECT
+# FS_01_measures and sample.R
 # Joanna R. Pepin & Melissa Milkie
 #-------------------------------------------------------------------------------
 
