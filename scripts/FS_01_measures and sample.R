@@ -18,6 +18,7 @@ data <- mtf_V2 %>%
   mutate(ID = row_number()) %>%
   select(ID, V5, ARCHIVE_WT, V1, V13, TABLET,         # Survey variables
          V2312, V2313, V2314, V2208, V2311,           # Project specific
+         V2239, V2241,
          V2616, V2617, V2618, V2619, V2620,
          V2433, V2434, V2435, V2436, V2437, V2438,
          V2439, V2440,
@@ -28,6 +29,7 @@ data <- mtf_V2 %>%
 data <- dplyr::rename(data,      
                       wt7611   = V5,     wt1222   = ARCHIVE_WT,  year     = V1, 
                       gdsp     = V2312,  gdpa     = V2313,       gdwk     = V2314,  
+                      getmar   = V2239,  markids  = V2241,
                       happy    = V2208,  lifesat  = V2311,       anxiety  = V2620, 
                       meaning  = V2616,  enjoy    = V2617,       hopeless = V2618,
                       alive    = V2619,  posatt   = V2433,       worth    = V2434,
@@ -166,6 +168,46 @@ data <- data %>%
       happy == 2 | happy == "PRTY HPY" | happy == "Pretty happy"   | happy == "PRTY HPY:(2)" ~ "Pretty happy",
       happy == 3 | happy == "VRY HPY"  | happy == "Very happy"     | happy == "VRY HPY:(3)"  ~ "Very happy",
       TRUE                                                                                   ~  NA_character_),
+    # Get married
+    getmar = fct_case_when(
+      getmar == 3 | getmar == "MARRY"    | getmar == "MARRY:(3)"    | getmar == "Getting married"     | getmar == "MARRIED:(3)"            ~ "GETTING MARRIED",
+      getmar == 1 | getmar == "NT MARRY" | getmar == "NT MARRY:(1)" | getmar == "Not getting married" | getmar == "NOT MAR:(1)"            ~ "NOT GETTING MARRIED",
+      getmar == 2 | getmar == "NO IDEA"  | getmar == "NO IDEA:(2)"  | getmar == "I have no idea"                                           ~ "I HAVE NO IDEA",
+      getmar == 8                        | getmar == "MARRIED:(8)"                                    | getmar == "ALREADY MAR:(8)"        ~ "ALREADY MARRIED",
+      getmar == 9 | getmar == "MISSING"  | getmar == "MISSING:(-9)" | getmar == "Missing"             | getmar == "R ASSIGNED ORANGE:(-8)" | 
+        getmar == 0 ~ "MISSING"),
+    # 3 category getmar
+    mar3 = fct_case_when(
+      getmar == "GETTING MARRIED" | getmar == "ALREADY MARRIED" ~ "Getting married",
+      getmar == "NOT GETTING MARRIED"                           ~ "Not getting married",
+      getmar == "I HAVE NO IDEA"                                ~ "I have no idea",
+      TRUE                                                      ~  NA_character_ ),
+    # getmar dummy
+    mardum = fct_case_when(
+      mar3     == "Not getting married"  |
+      mar3     == "I have no idea"       ~ 0,
+      mar3     == "Getting married"      ~ 1),
+    # If you did get married (or are married) . . . How likely is it that you would want to have children?
+    markids  = fct_case_when( 
+      markids == 1 | markids == "V UNLKLY"    | markids == "V UNLKLY:(1)"      | markids == "Very unlikely"            | markids == "VRY UNLKLY:(1)"    ~ "Very unlikely",
+      markids == 2 | markids == "FRLY UNL"    | markids == "FRLY UNL:(2)"      | markids == "Fairly unlikely"          | markids == "FAIRLY UNLK:(2)"   ~ "Fairly unlikely",
+      markids == 3 | markids == "UNCERTN"     | markids == "UNCERTN:(3)"       | markids == "Uncertain"                                                 ~ "Uncertain",
+      markids == 4 | markids == "FRLY LIK"    | markids == "FRLY LIK:(4)"      | markids == "Fairly likely"            | markids == "FAIRLY LK:(4)"     ~ "Fairly likely",
+      markids == 5 | markids == "VY LIKLY"    | markids == "VY LIKLY:(5)"      | markids == "Very likely"              | markids == "VRY LIKELY:(5)"    ~ "Very likely",
+      markids == 8                            | markids == "HAVE KID:(8)"      | markids == "Already have child(ren)"  | markids == "ALRDY HAVE:(8)"    ~ "Already have kid",
+      markids == 9 | markids == "MISSING"     | markids == "MISSING:(-9)"      | markids == "Missing"                  | 
+      markids == "R ASSIGNED ORANGE:(-8)"     | markids == "SCREEN BREAK:(-1)" | markids == "R ASSIGNED BLUE:(-8)"                                      ~  NA_character_ ),
+    # 3 category markids
+    kids3 = fct_case_when(
+      markids == "Very unlikely" | markids == "Fairly unlikely" | markids == "Uncertain"  ~ "Unlikely/Uncertain",
+      markids == "Fairly likely"                                                          ~ "Fairly likely",
+      markids == "Very likely" | markids == "Already have kid"                            ~ "Very likely",
+      TRUE                                                                                ~  NA_character_ ),
+    # markids dummy
+    kidsdum = fct_case_when(
+      kids3 == "Unlikely/Uncertain" | 
+      kids3 == "Fairly likely"      ~ 0,
+      kids3 == "Very likely"        ~ 1),
     # CMP SATFD W/LIFE
     lifesat = fct_case_when(
       lifesat == 1 | lifesat == "COMP DIS " | lifesat == "Completely dissatisfied"    | lifesat == "COMP DIS:(1)"      ~ "Completely dissatisfied",
@@ -369,6 +411,7 @@ data <- data %>%
          posatt, worth, welloth, satself, # Self-esteem (1984+)
          proud, nogood, wrong, lifeuse, # Self-derogation (1984+)
          meaning, enjoy, hopeless, alive, anxiety, # Depression & Anxiety (2022+)
+         getmar, mar3, mardum, markids, kids3, kidsdum, # Expectations
          sex, race, racesex, momed, famstru, famstru.d, religion, region, tablet) 
 
 ### Add formatted level labels for plotting 
@@ -518,8 +561,9 @@ counts <- data %>%
 
 # Create survey data -----------------------------------------------------------
 mtf_svy <- data %>%
-  select(c(gdsp, gdpa, gdwk, svyweight,  
-           sex, momed, race, region)) %>%
+  select(c(gdsp, gdpa, gdwk, svyweight, year, year.c, 
+           sex, momed, race, region,
+           getmar, mar3, mardum, markids, kids3, kidsdum)) %>%
   # weight data
   as_survey_design(id = 1,
                    weights = svyweight)
