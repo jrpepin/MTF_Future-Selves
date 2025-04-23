@@ -561,7 +561,8 @@ counts <- data %>%
 
 # Create survey data -----------------------------------------------------------
 mtf_svy <- data %>%
-  select(c(gdsp, gdpa, gdwk, svyweight, year, year.c, 
+  select(c(gdsp, gdpa, gdwk, gdsp_v, gdpa_v, gdwk_v, gdsp_num, gdpa_num, gdwk_v, 
+           svyweight, year, year.c, decade,
            sex, momed, race, region,
            getmar, mar3, mardum, markids, kids3, kidsdum)) %>%
   # weight data

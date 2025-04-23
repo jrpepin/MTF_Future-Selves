@@ -35,9 +35,9 @@ df_avg <- rbind(avg_sp, avg_pa, avg_wk)
 p1 <- df_avg %>%
   ggplot(aes(x = year, y = vals, color = cat, 
              ymin = vals_low, ymax = vals_upp)) +
-  #  geom_ribbon(fill = "lightgrey", linetype = "dotted", alpha=0.1) +
-  #  geom_line(linewidth = 1) +
-  geom_smooth(alpha = .1, method="loess", se=TRUE, fullrange=FALSE, level=0.95) +
+    geom_ribbon(fill = "lightgrey", linetype = "dotted", alpha=0.1) +
+    geom_line(linewidth = 1) +
+  #geom_smooth(alpha = .1, method="loess", se=TRUE, fullrange=FALSE, level=0.95) +
   geom_point(alpha = .5) +
   theme_minimal() +
   theme(
@@ -55,7 +55,7 @@ p1 <- df_avg %>%
 
 p1 
 
-ggsave(file.path(here(outDir, figDir),"PS_fig01.png"), p1, 
+ggsave(file.path(here(outDir, figDir),"averages.png"), p1, 
        width = 5.5, height = 5.5, dpi = 300, bg = 'white')
 
 

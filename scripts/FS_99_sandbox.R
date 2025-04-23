@@ -23,9 +23,9 @@ prop_wk <- mtf_svy %>%
          vals_upp = round_percent(vals_upp)/100)
 
 #### Combine dfs
-prop_sp$cat    <- "Spouse" 
-prop_pa$cat    <- "Parent" 
-prop_wk$cat    <- "Worker" 
+prop_sp$cat    <- "husband or wife" 
+prop_pa$cat    <- "parent" 
+prop_wk$cat    <- "worker on a job" 
 
 colnames(prop_sp)[colnames(prop_sp)=="gdsp"] <- "good"
 colnames(prop_pa)[colnames(prop_pa)=="gdpa"] <- "good"
@@ -37,7 +37,7 @@ p00 <- df_prop %>%
   ggplot(aes(y = decade, x = vals, fill = cat, 
              ymin = vals_low, ymax = vals_upp)) +
   geom_col(position = position_dodge()) +
-  facet_grid(vars(good), vars(fct_rev(cat))) +
+  facet_grid(vars(good), vars(cat)) +
   scale_x_continuous(labels = scales::percent_format(accuracy = 1)) +
   # stat_smooth(method = "lm", size = .5, fill = "grey80") +
   scale_y_discrete(limits = rev) +
