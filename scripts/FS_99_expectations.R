@@ -14,6 +14,11 @@ p_mardum <- mtf_svy %>%
   group_by(year, mardum) %>%
   summarize(vals  = survey_mean(vartype = "ci"))
 
+p_mardum_sex <- mtf_svy %>%
+  filter(!is.na(mardum)) %>%
+  group_by(year, sex, mardum) %>%
+  summarize(vals  = survey_mean(vartype = "ci"))
+
 p_markids <- mtf_svy %>%
   filter(!is.na(markids)) %>%
   group_by(year, markids) %>%
@@ -29,6 +34,10 @@ p_kidsdum <- mtf_svy %>%
   group_by(year, kidsdum) %>%
   summarize(vals  = survey_mean(vartype = "ci"))
 
+p_kidsdum_sex <- mtf_svy %>%
+  filter(!is.na(kidsdum)) %>%
+  group_by(year, sex, kidsdum) %>%
+  summarize(vals  = survey_mean(vartype = "ci"))
 
 #### Combine dfs
 p_getmar$cat   <- "getmar" 
@@ -38,6 +47,9 @@ p_markids$cat  <- "markids"
 p_kids3$cat    <- "kids3" 
 p_kidsdum$cat  <- "kidsdum" 
 
+p_mardum_sex$cat   <- "mardum" 
+p_kidsdum_sex$cat  <- "kidsdum" 
+
 colnames(p_getmar)[colnames(p_getmar)=="getmar"]    <- "response"
 colnames(p_mar3)[colnames(p_mar3)=="mar3"]          <- "response"
 colnames(p_mardum)[colnames(p_mardum)=="mardum"]    <- "response"
@@ -45,7 +57,14 @@ colnames(p_markids)[colnames(p_markids)=="markids"] <- "response"
 colnames(p_kids3)[colnames(p_kids3)=="kids3"]       <- "response"
 colnames(p_kidsdum)[colnames(p_kidsdum)=="kidsdum"] <- "response"
 
+colnames(p_mardum_sex)[colnames(p_mardum_sex)=="mardum"]    <- "response"
+colnames(p_kidsdum_sex)[colnames(p_kidsdum_sex)=="kidsdum"] <- "response"
+
 df_prop <- rbind(p_getmar, p_mar3, p_mardum, p_markids, p_kids3, p_kidsdum)
+
+df_prop_sex <- rbind(p_mardum_sex, p_kidsdum_sex)
+
+
 
 par1 <- df_prop %>%
   filter(cat == "markids") %>%
@@ -108,6 +127,29 @@ df_prop %>%
     color    = NULL,
     caption  = "Monitoring the Future 12th Grade Surveys (1976-2023)")
 
+
+# by gender
+df_prop_sex %>%
+  filter((cat == "mardum" |cat == "kidsdum") & response == 1) %>%
+  ggplot(aes(x = year, y = vals, ymin = vals_low, ymax = vals_upp,
+             colour = cat)) +
+  geom_line(aes(linetype = sex), linewidth = .7) +
+  geom_errorbar(alpha = .2) +
+  geom_point() +
+  theme_minimal() +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1), 
+                     limits = c(0, 1)) +
+  scale_x_continuous(limit  = c(1976, 2025)) +
+  scale_color_manual(breaks = c("mardum","kidsdum"),
+                     labels = c("get married", "if married, have children"), 
+                     values = c("#18BC9C", "#F39C12")) +
+  theme(legend.position = "top") +
+  labs(
+    title    = "% of U.S. high school seniors who think they will _________",
+    x        = NULL,
+    y        = NULL,
+    color    = NULL,
+    caption  = "Monitoring the Future 12th Grade Surveys (1976-2023)")
 
 
 # Table 4 ----------------------------------------------------------------------
