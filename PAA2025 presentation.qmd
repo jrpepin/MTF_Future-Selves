@@ -176,6 +176,7 @@ p1 + plot_spacer() + p2 + plot_layout(widths = c(4, .25 ,4))
 :::: {.content-visible when-profile="speaker"}
 ::: notes
 -   contribution: views of future self.
+**compotence** 
 
 -   interested in adolescents’ positivity in how they foresee their adulthood.
 
@@ -208,7 +209,7 @@ p1 + plot_spacer() + p2 + plot_layout(widths = c(4, .25 ,4))
 ##  {#caregiving-id background-image="images/care.png" data-menu-title="Caregiving Roles"}
 
 <h2>Expand definition of </h2>
-<h2>caregiving:</h2>
+<h2> caring roles:</h2>
 
 <br>  
 
