@@ -726,6 +726,16 @@ df_pp_sex$cat <- factor(df_pp_sex$cat,
 
 lables_year <- c("'76", "'92", "'08", "'23")
 
+data_max.sex <- df_pp_sex %>%
+  group_by(response.level) %>%
+  slice_max(x, n = 1) %>%
+  filter(group == "Men")
+
+data_min.sex <- df_pp_sex %>%
+  group_by(response.level) %>%
+  slice_min(x, n = 1) %>%
+  filter(response.level == "Very good")
+
 ```
 
 ::::: r-stack
@@ -740,11 +750,15 @@ df_pp_sex %>%
              ymin = conf.low, ymax = conf.high)) +
   #  geom_errorbar(width = 0.2, color="grey80") +
   geom_line(aes(linetype = group), linewidth = 2) +
+  geom_text_repel(aes(label = response.level), data = data_max.sex %>% filter(cat == "Spouse"), 
+                  size = 8, nudge_x = 5, segment.color = 'transparent') +
+  geom_text_repel(aes(label = group), data = data_min.sex %>% filter(cat == "Spouse"), 
+                  size = 8, nudge_x = 3, nudge_y = .05, segment.color = 'transparent', color = "grey30") +
   theme_minimal(30) +
   theme(#legend.position = c(1, 0),
     #legend.justification = c(1, 0),
     #   plot.title = element_text(face = "bold"),
-    legend.position  = "right",
+    legend.position  = "none",
     strip.text.x     = element_text(face = "bold"),
     panel.grid.minor = element_blank(),
     panel.spacing    = unit(1.1, "cm", data = NULL)) +
@@ -768,11 +782,15 @@ df_pp_sex %>%
              ymin = conf.low, ymax = conf.high)) +
   #  geom_errorbar(width = 0.2, color="grey80") +
   geom_line(aes(linetype = group), linewidth = 2) +
+  geom_text_repel(aes(label = response.level), data = data_max.sex %>% filter(cat == "Parent"), 
+                  size = 8, nudge_x = 5, segment.color = 'transparent') +
+  geom_text_repel(aes(label = group), data = data_min.sex %>% filter(cat == "Parent"), 
+                  size = 8, nudge_x = 3, nudge_y = .05, segment.color = 'transparent', color = "grey30") +
   theme_minimal(30) +
   theme(#legend.position = c(1, 0),
     #legend.justification = c(1, 0),
     #   plot.title = element_text(face = "bold"),
-    legend.position  = "right",
+    legend.position  = "none",
     strip.text.x     = element_text(face = "bold"),
     panel.grid.minor = element_blank(),
     panel.spacing    = unit(1.1, "cm", data = NULL)) +
@@ -797,11 +815,15 @@ df_pp_sex %>%
              ymin = conf.low, ymax = conf.high)) +
   #  geom_errorbar(width = 0.2, color="grey80") +
   geom_line(aes(linetype = group), linewidth = 2) +
+  geom_text_repel(aes(label = response.level), data = data_max.sex %>% filter(cat == "Worker"), 
+                  size = 8, nudge_x = 5, segment.color = 'transparent') +
+  geom_text_repel(aes(label = group), data = data_min.sex %>% filter(cat == "Worker"), 
+                  size = 8, nudge_x = 3, nudge_y = .03, segment.color = 'transparent', color = "grey30") +
   theme_minimal(30) +
   theme(#legend.position = c(1, 0),
     #legend.justification = c(1, 0),
     #   plot.title = element_text(face = "bold"),
-    legend.position  = "right",
+    legend.position  = "none",
     strip.text.x     = element_text(face = "bold"),
     panel.grid.minor = element_blank(),
     panel.spacing    = unit(1.1, "cm", data = NULL)) +
@@ -851,8 +873,6 @@ Very few expected to be “poor” or “not so good” in all three adult roles
 # Expectations
 add new graph here
 
-# Mom's Education
-add new graph here
 
 # Next Steps {#slide12-id data-menu-title="Implications"}
 
@@ -899,3 +919,7 @@ Melissa A. Milkie\
 Thanks!
 :::
 ::::
+
+# Mom's Education
+add new graph here
+
