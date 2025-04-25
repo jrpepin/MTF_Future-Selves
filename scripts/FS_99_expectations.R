@@ -168,35 +168,59 @@ polr2.pa.exp  <- polr(gdpa ~ year.c * sex + I(year.c^2) * sex  + kids3 +
                      data = data, weights = svyweight, Hess = T)
 
 ## Turn into tidy dataframes
-tidySP.4 <- broom::tidy(polr2.sp.exp)
-tidyPA.4 <- broom::tidy(polr2.pa.exp)
+
+tidySP     <- broom::tidy(polr2.sp)
+tidyPA     <- broom::tidy(polr2.pa)
+tidySP.exp <- broom::tidy(polr2.sp.exp)
+tidyPA.exp <- broom::tidy(polr2.pa.exp)
 
 ## Transform output
-tidySP.4 <- tidySP.4 %>%
+tidySP <- tidySP %>%
   mutate(z_scores = estimate/std.error,
          p.value  = round(2 * (1 - pnorm(abs(z_scores))), 3),
          estimate = case_when(
            coef.type == "coefficient" ~ exp(estimate),
            coef.type == "scale"       ~ estimate))
 
-tidyPA.4 <- tidyPA.4 %>%
+tidyPA <- tidyPA %>%
   mutate(z_scores = estimate/std.error,
          p.value  = round(2 * (1 - pnorm(abs(z_scores))), 3),
          estimate = case_when(
            coef.type == "coefficient" ~ exp(estimate),
            coef.type == "scale"       ~ estimate))
 
+tidySP.exp <- tidySP.exp %>%
+  mutate(z_scores = estimate/std.error,
+         p.value  = round(2 * (1 - pnorm(abs(z_scores))), 3),
+         estimate = case_when(
+           coef.type == "coefficient" ~ exp(estimate),
+           coef.type == "scale"       ~ estimate))
+
+tidyPA.exp <- tidyPA.exp %>%
+  mutate(z_scores = estimate/std.error,
+         p.value  = round(2 * (1 - pnorm(abs(z_scores))), 3),
+         estimate = case_when(
+           coef.type == "coefficient" ~ exp(estimate),
+           coef.type == "scale"       ~ estimate))
 
 ## Turn into modelsummary objects
-modSP.4        <- list(tidy = tidySP.4)
-class(modSP.4) <- "modelsummary_list"
+modSP            <- list(tidy = tidySP)
+class(modSP)     <- "modelsummary_list"
 
-modPA.4        <- list(tidy = tidyPA.4)
-class(modPA.4) <- "modelsummary_list"
+modPA            <- list(tidy = tidyPA)
+class(modPA)     <- "modelsummary_list"
 
-mods.4 <- list(
-  "Spouse" = modSP.4,
-  "Parent" = modPA.4)
+modSP.exp        <- list(tidy = tidySP.exp)
+class(modSP.exp) <- "modelsummary_list"
+
+modPA.exp        <- list(tidy = tidyPA.exp)
+class(modPA.exp) <- "modelsummary_list"
+
+mods <- list(
+  "Spouse \n full model" = modSP,
+  "Spouse \n with expectations" = modSP.exp,
+  "Parent \n full model" = modPA,
+  "Parent \n with expectations" = modPA.exp)
 
 cm <- c('year.c'                             = 'Year',
         'I(year.c^2)'                        = 'Year squared',
@@ -205,23 +229,17 @@ cm <- c('year.c'                             = 'Year',
         'sexWomen:I(year.c^2)'               = 'Year2 * Women',
         'mar3Not getting married'            = 'Not getting married',
         'mar3I have no idea'                 = 'I have no idea',
-        'kids3Fairly likely'                 = 'kids3Fairly likely',
-        'kids3Unlikely/Uncertain'            = 'Unlikely/Uncertain',
-        'Poor|Not so good'                   = 'Poor|Not so good',
-        'Not so good|Fairly good'            = 'Not so good|Fairly good',
-        'Fairly good|Good'                   = 'Fairly good|Good',
-        'Good|Very good'                     = 'Good|Very good')
+        'kids3Fairly likely'                 = 'Fairly likely',
+        'kids3Unlikely/Uncertain'            = 'Unlikely/Uncertain')
 
-table4 <- modelsummary(mods.4,
-                       shape = term ~ model + statistic,
+table <- modelsummary(mods,
                        stars = c("*" =.05, "**" = .01, "***" = .001),
                        coef_map = cm,
                        fmt = fmt_decimal(digits = 3, pdigits = 3),
                        output = "huxtable") %>%
-  huxtable::as_flextable()  %>%
-  add_footer_lines("Notes: 99,399")
+  huxtable::as_flextable()
 
-table4
+table
 
 
 # Table 5 ----------------------------------------------------------------------

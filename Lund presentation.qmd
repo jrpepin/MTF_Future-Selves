@@ -13,6 +13,7 @@ format:
     controls: true
     theme: [default, custom.scss]
     slide-number: c
+    scrollable: true
     width: 1280 # default: 970
     height: 800 # default: 700
 embed-resources: true
@@ -53,6 +54,9 @@ c_palette <- c("#18BC9C",
 # Run project scripts
 source(file.path("scripts/FS_00-1_setup and packages.R"))
 source(file.path("scripts/FS_01_measures and sample.R"))
+
+data$mar3  <- relevel(data$mar3,  ref = 1)
+data$kids3 <- relevel(data$kids3, ref = 3)
 
 ```
 
@@ -870,15 +874,116 @@ Very few expected to be “poor” or “not so good” in all three adult roles
 :::
 ::::
 
-# Expectations
+##  {#ModEXP-id data-menu-title="Adjusted for expectations"}
+
+Models adjusted for marital and parenthood expectations  
+
+```{r warning = FALSE}
+
+library(ftExtra)
+
+## Models with expectations as controls
+polr2.sp.exp  <- polr(gdsp ~ year.c * sex + I(year.c^2) * sex + mar3 +
+                       momed + race + region,
+                     data = data, weights = svyweight, Hess = T)
+
+polr2.pa.exp  <- polr(gdpa ~ year.c * sex + I(year.c^2) * sex  + kids3 +
+                       momed + race + region,
+                     data = data, weights = svyweight, Hess = T)
+
+## Turn into tidy dataframes
+
+tidySP     <- broom::tidy(polr2.sp)
+tidyPA     <- broom::tidy(polr2.pa)
+tidySP.exp <- broom::tidy(polr2.sp.exp)
+tidyPA.exp <- broom::tidy(polr2.pa.exp)
+
+## Transform output
+tidySP <- tidySP %>%
+  mutate(z_scores = estimate/std.error,
+         p.value  = round(2 * (1 - pnorm(abs(z_scores))), 3),
+         estimate = case_when(
+           coef.type == "coefficient" ~ exp(estimate),
+           coef.type == "scale"       ~ estimate))
+
+tidyPA <- tidyPA %>%
+  mutate(z_scores = estimate/std.error,
+         p.value  = round(2 * (1 - pnorm(abs(z_scores))), 3),
+         estimate = case_when(
+           coef.type == "coefficient" ~ exp(estimate),
+           coef.type == "scale"       ~ estimate))
+
+tidySP.exp <- tidySP.exp %>%
+  mutate(z_scores = estimate/std.error,
+         p.value  = round(2 * (1 - pnorm(abs(z_scores))), 3),
+         estimate = case_when(
+           coef.type == "coefficient" ~ exp(estimate),
+           coef.type == "scale"       ~ estimate))
+
+tidyPA.exp <- tidyPA.exp %>%
+  mutate(z_scores = estimate/std.error,
+         p.value  = round(2 * (1 - pnorm(abs(z_scores))), 3),
+         estimate = case_when(
+           coef.type == "coefficient" ~ exp(estimate),
+           coef.type == "scale"       ~ estimate))
+
+## Turn into modelsummary objects
+modSP            <- list(tidy = tidySP)
+class(modSP)     <- "modelsummary_list"
+
+modPA            <- list(tidy = tidyPA)
+class(modPA)     <- "modelsummary_list"
+
+modSP.exp        <- list(tidy = tidySP.exp)
+class(modSP.exp) <- "modelsummary_list"
+
+modPA.exp        <- list(tidy = tidyPA.exp)
+class(modPA.exp) <- "modelsummary_list"
+
+mods <- list(
+  "full model" = modSP,
+  "with expectations" = modSP.exp,
+  "full model" = modPA,
+  "with expectations" = modPA.exp)
+
+ cm <- c('year.c'                             = 'Year',
+         'I(year.c^2)'                        = 'Year2',
+         'sexWomen'                           = "Women",
+         'year.c:sexWomen'                    = 'Year * Women',
+         'sexWomen:I(year.c^2)'               = 'Year2 * Women',
+         'mar3Not getting married'            = 'Not getting married',
+         'mar3I have no idea'                 = 'I have no idea',
+         'kids3Fairly likely'                 = 'Fairly likely',
+         'kids3Unlikely/Uncertain'            = 'Unlikely/Uncertain')
+
+table <- modelsummary(mods,
+                      shape = term ~ model + statistic,
+                      estimate = "{estimate}{stars}",
+                      gof_omit = ".*",
+                      coef_map = cm,
+                      fmt = fmt_decimal(digits = 3, pdigits = 3),
+                      output = "huxtable") %>%
+  huxtable::as_flextable() %>%
+  add_body_row(values = c(" ", "coef.", "S.E.","coef.", "S.E.","coef.", "S.E.","coef.", "S.E."), colwidths = c(1,1,1,1,1,1,1,1,1)) %>%
+  add_body_row(values = c(" ", "full model", "with expectations","full model", "with expectations"), colwidths = c(1,2,2,2,2)) %>%
+  delete_rows(i = 3, part = "body") %>%
+  add_header_row(colwidths = c(1, 4, 4), values = c(" ", "Spouse", "Parents")) %>%
+   theme_vanilla() %>%
+    align(i = 1, part = "header", align = "center") %>%
+    align(i = 1, part = "body", align = "center") %>%
+  fontsize(size = 22, part = "all")
+
+table
+```
+
+## Sub-sample of expectations
 add new graph here
 
 
-# Next Steps {#slide12-id data-menu-title="Implications"}
+# Summary {#slide12-id data-menu-title="Summary"}
 
-::: {.fragment .custom .blur}
--   Link with actual marriage/parenthood transitions\
-:::
+- add summary
+
 
 :::: {.content-visible when-profile="speaker"}
 ::: notes

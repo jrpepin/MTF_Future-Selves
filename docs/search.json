@@ -180,5 +180,19 @@
     "title": "Social Change in Future Selves:",
     "section": "",
     "text": "Predicted % from ordinal logistic regression with year, year2, gender, mom’s edu., race, & region"
+  },
+  {
+    "objectID": "Lund presentation.html#ModEXP-id",
+    "href": "Lund presentation.html#ModEXP-id",
+    "title": "Social Change in Future Selves:",
+    "section": "",
+    "text": "Models adjusted for marital and parenthood expectations\n\n\n SpouseParents full modelwith expectationsfull modelwith expectations coef.S.E.coef.S.E.coef.S.E.coef.S.E.Year1.011***0.0001.015***0.0011.009***0.0001.012***0.001Year20.999***0.0000.999***0.0000.999***0.0001.000***0.000Women1.217***0.0121.070***0.0191.162***0.0121.174***0.020Year * Women0.991***0.0010.996***0.001Year2 * Women1.000**0.0001.000**0.000Not getting married0.113***0.034I have no idea0.306***0.018Fairly likely0.347***0.016Unlikely/Uncertain0.121***0.019"
+  },
+  {
+    "objectID": "Lund presentation.html#sub-sample-of-expectations",
+    "href": "Lund presentation.html#sub-sample-of-expectations",
+    "title": "Social Change in Future Selves:",
+    "section": "Sub-sample of expectations",
+    "text": "Sub-sample of expectations\nadd new graph here"
   }
 ]
