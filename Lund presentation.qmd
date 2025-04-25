@@ -31,7 +31,7 @@ include-in-header:
       }
       </style>
 title-slide-attributes: 
-       data-background-image: images/qr-code-leaf.png
+       data-background-image: images/qr-code-leaf-lund.png
        data-background-size: "25%"
        data-background-position: "100% 100%"
 ---
@@ -215,8 +215,8 @@ p1 + plot_spacer() + p2 + plot_layout(widths = c(4, .25 ,4))
 <br>  
 
 ::: {.incremental style="font-size: 150%"}
--   [Caring for a spouse]{style="color: #E74C3C"}
--   [In-direct care]{style="color: #9966FF"}
+-   [Caring for a spouse]{style="color: #18BC9C"}
+-   [In-direct care]{style="color: #18BC9C"}
 :::
 
 :::: {.content-visible when-profile="speaker"}
@@ -373,7 +373,7 @@ research grants from the National Institute on Drug Abuse, a part of NIH.
 :::
 ::::
 
-##  {#slide6-id data-menu-title="Dependent Variables"}
+##  {#DVs-id data-menu-title="Dependent Variables"}
 
 These next questions ask you to guess how well you might do in several different situations.
 **How good do you think you would be as a**:
@@ -412,7 +412,7 @@ question prompt.
 :::
 ::::
 
-## Key IVs {#slide7-id data-menu-title="Independent Variables"}
+## Key IVs {#IVs-id data-menu-title="Independent Variables"}
 
 ::::: columns
 ::: {.column width="30%"}
@@ -435,7 +435,7 @@ RQ2: gender & year interaction
 :::
 ::::
 
-## Sample {#slide8-id data-menu-title="Sample"}
+## Sample {#Sample-id data-menu-title="Sample"}
 
 ```{r results = 'asis', warning = FALSE}
 mtf_svy %>%
@@ -473,35 +473,110 @@ Also include these variables in our full models.
 :::
 ::::
 
-# Findings {#slide9-id data-menu-title="Results"}
+# Findings {#Results-id data-menu-title="Results"}
 
 :::: {.content-visible when-profile="speaker"}
 ::: notes
 stepwise ordinal logistic regression models:
 
-1.  year + year^2^\
-2.  added all control variables\
+1.  bivariate\
+2.  year * year^2^ + all control variables\
 3.  interacted year and gender.
 
 show the predicted % rather than tables of coef.
 :::
 ::::
 
-##  {#slide10-id data-menu-title="Figure 1"}
+## {#Bivariate-id data-menu-title="Bivariate Trends"}
+
+```{r warning = FALSE, fig.width=13, fig.asp=.7}
+
+avg_sp <- mtf_svy %>%
+  select(year, gdsp_v) %>%
+  group_by(year) %>%
+  summarize(vals  = survey_mean(gdsp_v, na.rm = TRUE, vartype = "ci")) %>% # create summary proportions
+  mutate(vals     = round(vals, digits = 2), 
+         vals_low = round(vals_low, digits = 2), 
+         vals_upp = round(vals_upp, digits = 2))
+
+avg_pa <- mtf_svy %>%
+  select(year, gdpa_v) %>%
+  group_by(year) %>%
+  summarize(vals  = survey_mean(gdpa_v, na.rm = TRUE, vartype = "ci")) %>% # create summary proportions
+  mutate(vals     = round(vals, digits = 2), 
+         vals_low = round(vals_low, digits = 2), 
+         vals_upp = round(vals_upp, digits = 2))
+
+avg_wk <- mtf_svy %>%
+  select(year, gdwk_v) %>%
+  group_by(year) %>%
+  summarize(vals  = survey_mean(gdwk_v, na.rm = TRUE, vartype = "ci")) %>% # create summary proportions
+  mutate(vals     = round(vals, digits = 2), 
+         vals_low = round(vals_low, digits = 2), 
+         vals_upp = round(vals_upp, digits = 2))
+
+#### Combine dfs
+avg_sp$cat    <- "Spouse" 
+avg_pa$cat    <- "Parent" 
+avg_wk$cat    <- "Worker" 
+
+df_avg <- rbind(avg_sp, avg_pa, avg_wk)
+
+data_ends.avg <- df_avg %>%
+  group_by(cat) %>%
+  top_n(1, year) 
+
+data_ends.avg$label <- paste(scales::percent(data_ends.avg$vals, 1), data_ends.avg$cat)
+
+data_max.avg <- df_avg %>%
+  group_by(cat) %>%
+  top_n(1, vals) 
+
+df_avg %>%
+  ggplot(aes(x = year, y = vals, color = cat, 
+             ymin = vals_low, ymax = vals_upp)) +
+    geom_ribbon(fill = "lightgrey", linetype = "dotted", alpha=0.1) +
+    geom_line(linewidth = 3, alpha = .6) +
+  geom_point(size = 4) +
+  geom_text_repel(aes(label = label), data = data_ends.avg, size = 8, nudge_x = 5, segment.color = 'transparent') +
+  geom_text_repel(aes(label = scales::percent(vals, 1)), data = data_max.avg, size = 5, nudge_y = .02, segment.color = 'transparent') +
+  theme_minimal(28) +
+  theme(
+    legend.position = "none",
+    plot.title.position = "plot",
+    panel.grid.minor    = element_blank(),
+    plot.caption        = element_text(color = "grey70", size = 16)) +
+    scale_color_manual(values = c("#9966FF", "#18BC9C", "#e74c3c")) +
+  guides(color = guide_legend(reverse=TRUE)) +
+  scale_x_continuous(limits = c(1984, 2030), breaks = c(1985, 1995, 2005, 2015, 2025)) +
+  scale_y_continuous(limits = c(0, .75), breaks = c(0, .25, .50, .75), labels = percent) +
+  labs( x        = " ", 
+        y        = " ", 
+        color    = " ",
+        title    = "% who think they would be 'very good' as a _________",
+#        subtitle = "Scale: (1) Poor - (5) Very good",
+        caption  = "Monitoring the Future 12th Grade Surveys (1984-2023)")
+
+
+```
+
+
+##  {#Mod2-id data-menu-title="Full Model"}
 
 ```{r warning = FALSE}
 
-polr1.sp  <- polr(gdsp ~ year.c + I(year.c^2),
+polr2.sp  <- polr(gdsp ~ year.c + I(year.c^2) + sex + momed + race + region,
                   data = data, weights = svyweight, Hess = T)
-polr1.pa  <- polr(gdpa ~ year.c + I(year.c^2),
+polr2.pa  <- polr(gdpa ~ year.c + I(year.c^2) + sex + momed + race + region,
                   data = data, weights = svyweight, Hess = T)
-polr1.wk  <- polr(gdwk ~ year.c + I(year.c^2),
+polr2.wk  <- polr(gdwk ~ year.c + I(year.c^2) + sex + momed + race + region,
                   data = data, weights = svyweight, Hess = T)
 
+
 ## Average Predictions 
-pp_sp   <- predict_response(polr1.sp, terms = c("year.c [all]"))
-pp_pa   <- predict_response(polr1.pa, terms = c("year.c [all]"))
-pp_wk   <- predict_response(polr1.wk, terms = c("year.c [all]"))
+pp_sp   <- predict_response(polr2.sp, terms = c("year.c [all]"))
+pp_pa   <- predict_response(polr2.pa, terms = c("year.c [all]"))
+pp_wk   <- predict_response(polr2.wk, terms = c("year.c [all]"))
 
 ## Combine dfs
 pp_sp$cat    <- "Spouse" 
@@ -526,7 +601,7 @@ df_pp$cat <- factor(df_pp$cat,
 ```
 
 ::::: r-stack
-::: fragment
+
 ```{r warning = FALSE, fig.width=14, fig.asp=.6}
 
 lables_year <- c("'76", "'92", "'08", "'23")
@@ -550,15 +625,16 @@ df_pp %>%
     panel.grid.minor    = element_blank()) +
   scale_y_continuous(breaks = c(0., .25, .5, .75), limits=c(0, .75), labels = scales::percent) +
   scale_x_continuous(breaks = c(-20.55, -4.55, 11.45, 26.45), labels = lables_year) +
-  scale_color_manual(values = c("#18BC9C", "#3498DB", "#e74c3c")) +
+  scale_color_manual(values = c("#18BC9C", "#9966FF", "#e74c3c")) +
   labs( x        = " ", 
         y        = " ",
         title    = "% who think they will be 'very good' as a ____________")
 
 ```
-:::
 
-::: fragment
+
+::: {.fragment fragment-index=1}
+
 ```{r warning = FALSE, fig.width=14, fig.asp=.6}
 
 lables_year <- c("'76", "'92", "'08", "'23")
@@ -579,7 +655,7 @@ df_pp %>%
     panel.spacing = unit(1.1, "cm", data = NULL)) +
   scale_y_continuous(breaks = c(0., .25, .5), limits=c(0, .5), labels = scales::percent) +
   scale_x_continuous(breaks=c(-20.55, -4.55, 11.45, 26.45), labels = lables_year) +
-  scale_color_manual(values = c("#18BC9C", "#3498DB", "#e74c3c")) +
+  scale_color_manual(values = c("#18BC9C", "#9966FF", "#e74c3c")) +
   labs( x        = " ", 
         y        = " ",
         title    = "% who think they will be '__________' as a ____________")
@@ -588,7 +664,7 @@ df_pp %>%
 :::::
 
 ::: aside
-Predicted % from ordinal logistic regression with year + year^2^
+Predicted % from ordinal logistic regression with year, year^2^, gender, mom's edu., race, & region.
 :::
 
 :::: {.content-visible when-profile="speaker"}
@@ -607,9 +683,9 @@ Model 2: gender + control variables -- coefficients for year and year^2^ steady 
 :::
 ::::
 
-##  {#slide11-id data-menu-title="Figure 2"}
+##  {#Mod3-id data-menu-title="Gender * Year Model"}
 
-```{r warning = FALSE, fig.width=18, fig.asp=.6}
+```{r warning = FALSE}
 
 polr2.sp.RS  <- polr(gdsp ~ year.c * sex + I(year.c^2) * sex +
                        momed + race + region,
@@ -650,15 +726,20 @@ df_pp_sex$cat <- factor(df_pp_sex$cat,
 
 lables_year <- c("'76", "'92", "'08", "'23")
 
+```
+
+::::: r-stack
+
+```{r warning = FALSE, fig.width=14, fig.asp=.6}
 
 ## Draw figure
 
-p2 <- df_pp_sex %>%
+df_pp_sex %>%
+  filter(cat == "Spouse") %>%
   ggplot(aes(x = x, y = predicted, color = response.level,
              ymin = conf.low, ymax = conf.high)) +
   #  geom_errorbar(width = 0.2, color="grey80") +
-  geom_line(aes(linetype = group), linewidth = 1.5) +
-  facet_wrap(~cat) +
+  geom_line(aes(linetype = group), linewidth = 2) +
   theme_minimal(30) +
   theme(#legend.position = c(1, 0),
     #legend.justification = c(1, 0),
@@ -669,17 +750,75 @@ p2 <- df_pp_sex %>%
     panel.spacing    = unit(1.1, "cm", data = NULL)) +
   scale_y_continuous(breaks = c(0., .25, .5, .75), limits=c(0, .75), labels = scales::percent) +
   scale_x_continuous(breaks=c(-20.55, -4.55, 11.45, 26.45), labels = lables_year) +
-  scale_color_manual(values = c("#18BC9C", "#3498DB", "#9966FF","#e74c3c","#2C3E50")) +
+  scale_color_manual(values = c("#18BC9C", "#3498DB", "#9966FF","#F39C12", "#e74c3c")) +
   labs( x        = " ", 
         y        = " ",
         color    = "Response level",
-        title    = "% who think they will be ' __________' as a ____________",
+        title    = "% who think they will be ' __________' as a spouse",
         linetype = " ")
 
-p2
-
-
 ```
+
+::: {.fragment fragment-index=1}
+
+```{r warning = FALSE, fig.width=14, fig.asp=.6}
+df_pp_sex %>%
+  filter(cat == "Parent") %>%
+  ggplot(aes(x = x, y = predicted, color = response.level,
+             ymin = conf.low, ymax = conf.high)) +
+  #  geom_errorbar(width = 0.2, color="grey80") +
+  geom_line(aes(linetype = group), linewidth = 2) +
+  theme_minimal(30) +
+  theme(#legend.position = c(1, 0),
+    #legend.justification = c(1, 0),
+    #   plot.title = element_text(face = "bold"),
+    legend.position  = "right",
+    strip.text.x     = element_text(face = "bold"),
+    panel.grid.minor = element_blank(),
+    panel.spacing    = unit(1.1, "cm", data = NULL)) +
+  scale_y_continuous(breaks = c(0., .25, .5, .75), limits=c(0, .75), labels = scales::percent) +
+  scale_x_continuous(breaks=c(-20.55, -4.55, 11.45, 26.45), labels = lables_year) +
+  scale_color_manual(values = c("#18BC9C", "#3498DB", "#9966FF","#F39C12", "#e74c3c")) +
+  labs( x        = " ", 
+        y        = " ",
+        color    = "Response level",
+        title    = "% who think they will be ' __________' as a parent",
+        linetype = " ")
+```
+
+:::
+
+::: {.fragment fragment-index=2}
+
+```{r warning = FALSE, fig.width=14, fig.asp=.6}
+df_pp_sex %>%
+  filter(cat == "Worker") %>%
+  ggplot(aes(x = x, y = predicted, color = response.level,
+             ymin = conf.low, ymax = conf.high)) +
+  #  geom_errorbar(width = 0.2, color="grey80") +
+  geom_line(aes(linetype = group), linewidth = 2) +
+  theme_minimal(30) +
+  theme(#legend.position = c(1, 0),
+    #legend.justification = c(1, 0),
+    #   plot.title = element_text(face = "bold"),
+    legend.position  = "right",
+    strip.text.x     = element_text(face = "bold"),
+    panel.grid.minor = element_blank(),
+    panel.spacing    = unit(1.1, "cm", data = NULL)) +
+  scale_y_continuous(breaks = c(0., .25, .5, .75), limits=c(0, .75), labels = scales::percent) +
+  scale_x_continuous(breaks=c(-20.55, -4.55, 11.45, 26.45), labels = lables_year) +
+  scale_color_manual(values = c("#18BC9C", "#3498DB", "#9966FF","#F39C12", "#e74c3c")) +
+  labs( x        = " ", 
+        y        = " ",
+        color    = "Response level",
+        title    = "% who think they will be ' __________' as a worker",
+        linetype = " ")
+```
+
+:::
+
+::::: 
+
 
 ::: aside
 Predicted % from ordinal logistic regression with year, year^2^, gender, mom's edu., race, & region
@@ -751,7 +890,7 @@ Melissa A. Milkie\
 :::
 
 ::: {.column width="50%"}
-![](images/qr-code-leaf.png){fig-align="center" width="100%"}
+![](images/qr-code-leaf-lund.png){fig-align="center" width="100%"}
 :::
 :::::
 
