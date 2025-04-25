@@ -55,9 +55,8 @@ source(file.path("scripts/FS_01_measures and sample.R"))
 
 ```
 
-# Background
 
-##  {#famrates-id data-menu-title="Marriage and Parenthood Rates"}
+#  {#slide2-id data-menu-title="Background"}
 
 ```{r warning = FALSE, fig.width=14, fig.asp=.55}
 
@@ -101,8 +100,7 @@ p1 <- df.mar %>%
     plot.margin = unit(c(0, 0, 0, 0), "null"),
     panel.margin = unit(c(0, 0, 0, 0), "null"),
     plot.subtitle       = element_text(color = "grey50", size = 16),
-    plot.caption        = element_text(color = "grey70", size = 14),
-    plot.title.position = "plot") +
+    plot.caption        = element_text(color = "grey70", size = 14)) +
   scale_y_continuous(
     breaks = seq(0, 12, by=2), 
     limits = c(0, 12)) +
@@ -133,8 +131,7 @@ p2 <- df.birth %>%
     plot.margin = unit(c(0, 0, 0, 0), "null"),
     panel.margin = unit(c(0, 0, 0, 0), "null"),
     plot.subtitle       = element_text(color = "grey50", size = 16),
-    plot.caption        = element_text(color = "grey70", size = 14),
-    plot.title.position = "plot") +
+    plot.caption        = element_text(color = "grey70", size = 14)) +
   scale_y_continuous(
     breaks = seq(0, 4, by=1), 
     limits = c(0, 4)) +
@@ -145,194 +142,52 @@ p2 <- df.birth %>%
         subtitle = "Number of births per woman",
         caption  = "ourworldindata.org/grapher/children-born-per-woman")
 
-p1 + plot_spacer() + p2 + plot_layout(widths = c(4, .25 ,4))
+ p1 + p2
 
 ```
 
 :::: {.content-visible when-profile="speaker"}
 ::: notes
 -   Demographic research documented declining rates in marriage/fertility.\
+-   SDT suggests a shift in values from traditional to individualistic norms precedes these behaviors.  
+-   Another line of research:  economic forces account for some behavior.  
+-   Lots of research on changes in ideals and expectations to get at both of these explanations in different ways.\
 :::
 ::::
 
+##  {#slide3-id background-image="images/future.png" background-size="contain" data-menu-title="Future Selves"}
 
+**Contributions**
 
-##  {#gap-id background-image="images/doors.png" data-menu-title="Culture vs Structure"}
-
-:::: {.content-visible when-profile="speaker"}
-::: notes
-**Second Demographic Transition**\
-- suggests a shift in values from traditional to individualistic norms precedes these behaviors.\
-- research focuses on cultural shifts\
-- changes in ideals/aspirations
-
-**Structural changes** - economic forces account for some behavior.\
-- expectations for self\
-:::
-::::
-
-##  {#future-id background-image="images/future.png" background-size="contain" data-menu-title="Future Selves"}
-
-:::: {.content-visible when-profile="speaker"}
-::: notes
--   contribution: views of future self.
-**compotence** 
-
--   interested in adolescents’ positivity in how they foresee their adulthood.
-
--   guess their potential as good spouses, parents, and workers
-
--   young adulthood [Elder (2018); Mannheim (1952)]{style="color: #grey70; font-size: 50%"}
-
--   young adulthood for "imprinting" the future
-
--   understandings of who they are, their motivation toward taking steps to fulfill goals, and their health and wellbeing
-:::
-::::
-
-## Caregiving Ambitions Framework {#care-id}
-
-[Bear 2019](https://journals.aom.org/doi/10.5465/amr.2016.0424){target="_blank"}
-
-<br>
-
-::: {style="font-size: 200%; font-family: 'Shadows Into Light'"}
-[**Motivation to give care**]{style="color: #E74C3C"}, across a variety of contexts and over the lifespan, [**is central to understanding life goals**]{style="color: #E74C3C"} and ultimately behavior
+::: {.incremental .highlight-last}
+-   norms + structure []{style="color: #grey70; font-size: 50%"}\
+-   young adulthood [Elder (2018); Mannheim (1952)]{style="color: #grey70; font-size: 50%"}\
+-   caregiving ambitions [Bear 2019]{style="color: #grey70; font-size: 50%"}\
 :::
 
 :::: {.content-visible when-profile="speaker"}
 ::: notes
--   proposes that motivation to give care, across a variety of contexts and over the lifespan, central to understanding life goals and ultimately behavior.
+-   contribution: views of future self.  
+-   interested in adolescents’ positivity in how they foresee their adulthood.  
+-   guess their potential as good spouses, parents, and workers  
+[**\<click\>**]{style="color: #E74C3C;"}\
+We argue future selves are shaped by:  
+-   structural contexts (rising inequality + anxiety + WFA + tech + globalization)  
+-   societal norms & values (SDT + intensive parenting) influence aspirations  
+[**\<click\>**]{style="color: #E74C3C;"}\
+-   young adulthood for "imprinting" the future\
+-  understandings of who they are, their motivation toward taking steps to fulfill goals, and their health and wellbeing  
+[**\<click\>**]{style="color: #E74C3C;"}\
+-   caregiving ambition framework proposes that motivation to give care, across a variety of contexts and over the lifespan, are central to understanding life goals and ultimately behavior  
+-   often think of caring for child or someone with a disability.  
+-   we argue should expand to include caring for one's spouse  
+-   and in-direct caregiving through monetary support  
+-   look at caregiving in 3 roles: spouse, parent, worker  
+  
 :::
 ::::
 
-##  {#caregiving-id background-image="images/care.png" data-menu-title="Caregiving Roles"}
-
-<h2>Expand definition of </h2>
-<h2> caring roles:</h2>
-
-<br>  
-
-::: {.incremental style="font-size: 150%"}
--   [Caring for a spouse]{style="color: #E74C3C"}
--   [In-direct care]{style="color: #F39C12"}
-:::
-
-:::: {.content-visible when-profile="speaker"}
-::: notes
--   often think of caring for child or someone with a disability.\
--   we argue should expand definition to include caring for one's spouse\
--   and in-direct caregiving through monetary support\
--   look at caregiving in 3 roles: spouse, parent, worker\
-:::
-::::
-
-##  {#time-id background-image="images/timeline.png" background-size="contain" data-menu-title="Change over time"}
-
-:::: {.content-visible when-profile="speaker"}
-::: notes
-We argue future selves are shaped by:\
-- structural contexts (rising inequality + anxiety + WFA + tech + globalization)\
-- societal norms & values (SDT + intensive parenting) influence aspirations
-:::
-::::
-
-## {#gender-id  data-menu-title="Change over time"}
-
-```{r warning = FALSE, fig.width=14, fig.asp=.55}
-
-library(tidyverse)
-library(jsonlite)
-library(ggrepel) 
-library(patchwork)
-
-df.lfp <- read.csv("https://ourworldindata.org/grapher/female-employment-to-population-ratio.csv?v=1&csvType=filtered&useColumnShortNames=true&time=1970..latest&country=CAN~USA~KOR~SWE")
-
-df.time <- read.csv("https://ourworldindata.org/grapher/time-spend-in-domestic-work-female-vs-male.csv?v=1&csvType=filtered&useColumnShortNames=true&tab=table&time=2021&showSelectionOnlyInTable=1&country=SWE~USA~CAN~KOR") %>%
-#  filter(Code == "CAN" | Code == "USA" | Code == "KOR" | Code == "SWE") %>%
-  rename("men" = "X_5_4_1__sl_dom_tspd__15_years_old_and_over__all_areas__male",
-         "women" = "X_5_4_1__sl_dom_tspd__15_years_old_and_over__all_areas__female") %>%
-  select(Year, women, men, Entity, Code) %>%
-  mutate(women_pct = women/100,
-         men_pct = men/100) %>%
-  group_by(Entity) %>%
- summarise(across(everything(), ~ if(all(is.na(.))) NA else dplyr::last(na.omit(.))))  
-
-data_ends.lfp <- df.lfp %>%
-  group_by(Entity) %>%
-  top_n(1, Year) 
-
-
-
-p1 <- df.lfp %>%
-  ggplot(aes(x = Year, y = sl_emp_totl_sp_fe_ne_zs, color = Entity)) +
-  geom_line(linewidth = 1.5) +
-  geom_text_repel(aes(label = Code), data = data_ends.lfp, size = 6, nudge_x = 1.5) +
-  theme_minimal(20) +
-  theme(
-    legend.position     = "none",
-    legend.title        = element_blank(),
-    panel.grid.minor    = element_blank(),
-    panel.grid.major.x  = element_blank(),
-    plot.margin = unit(c(0, 0, 0, 0), "null"),
-    panel.margin = unit(c(0, 0, 0, 0), "null"),
-    plot.subtitle       = element_text(color = "grey50", size = 17),
-    plot.caption        = element_text(color = "grey70", size = 14),
-    plot.title.position = "plot") +
-  scale_y_continuous(
-    breaks = seq(0, 75, by=15), 
-    limits = c(0, 75)) +
-  scale_color_manual(values = c("#e74c3c", "#18BC9C","#F39C12", "#3498DB")) +
-  labs( x        = " ", 
-        y        = " ",
-        title    = "Women's employment-to-population ratio",
-        subtitle = "Proportion of women 15+ that is employed",
-        caption  = "ourworldindata.org/grapher/female-employment-to-population-ratio")
-
-p2 <- df.time %>%
-  ggplot(aes(x = men_pct, y = women_pct, color = Entity, label = Code)) +
-  geom_point(size = 5) +
-  geom_text_repel(size = 6) +
-  theme_minimal(20) +
-  scale_y_continuous(limits=c(0, .25), labels = scales::percent) +
-  scale_x_continuous(limits=c(0, .15), labels = scales::percent) +
-    scale_color_manual(values = c("#e74c3c", "#18BC9C","#F39C12", "#3498DB")) +
-    theme(
-    legend.position     = "none",
-    legend.title        = element_blank(),
-    panel.grid.minor    = element_blank(),
-    panel.grid.major.x  = element_blank(),
-    plot.margin = unit(c(0, 0, 0, 0), "null"),
-    panel.margin = unit(c(0, 0, 0, 0), "null"),
-    plot.subtitle       = element_text(color = "grey50", size = 17),
-    plot.caption        = element_text(color = "grey70", size = 14),
-    axis.title          = element_text(color = "grey50", size = 16),
-    plot.title.position = "plot") +
-  labs( 
-    x        = "Men (% of 24 hour day)", 
-    y        = "Women (% of 24 hour day)",
-    title    = "Time on unpaid care and domestic work",
-    subtitle = "(2021)",
-    caption  = "ourworldindata.org/grapher/time-spend-in-domestic-work-female-vs-male")
-
-p1 + plot_spacer() + p2 + plot_layout(widths = c(4, .3 ,4))
-
-
-```
-
-
-:::: {.content-visible when-profile="speaker"}
-::: notes
--   Demographic research focus on women's laborforce participation.\
--   uneven revolution: women's lives changed more than men's.\
--   still, men are doing more at home.
--   might expect gender differences in positivity as expectations/experience changes.  
-:::
-::::
-
-
-
-## Research Questions {#RQs-id data-menu-title="Research Questions" background-image="images/questionmark-gray.png" background-size="100px" background-repeat="repeat"}
+## Research Questions {#slide4-id data-menu-title="Research Questions" background-image="images/questionmark-gray.png" background-size="100px" background-repeat="repeat"}
 
 ::: {.incremental .highlight-last style="font-size: 150%"}
 1.  Are there **changes** in youths' views of their future selves as spouses, parents, and workers?\
@@ -346,7 +201,7 @@ First RQ: \[read it\]\
 
 [**\<click\>**]{style="color: #E74C3C;"}\
 Second RQ \[read it\]\
-**man provider—woman homemaker**: gender differences
+**man provider—woman homemaker**: gender differences  
 :::
 ::::
 
@@ -367,10 +222,11 @@ N = 99,399
 
 :::: {.content-visible when-profile="speaker"}
 ::: notes
-study changes in the beliefs, attitudes, and behavior of young people in the United States.\
-research grants from the National Institute on Drug Abuse, a part of NIH.
+study changes in the beliefs, attitudes, and behavior of young people in the United States.  
+research grants from the National Institute on Drug Abuse, a part of NIH.  
 :::
 ::::
+
 
 ##  {#slide6-id data-menu-title="Dependent Variables"}
 
@@ -407,7 +263,7 @@ These next questions ask you to guess how well you might do in several different
 
 :::: {.content-visible when-profile="speaker"}
 ::: notes
-question prompt.
+question prompt.  
 :::
 ::::
 
@@ -427,7 +283,7 @@ question prompt.
 
 :::: {.content-visible when-profile="speaker"}
 ::: notes
-RQ1: changes over time: year\
+RQ1: changes over time: year  
 nonlinearity: year squared.
 
 RQ2: gender & year interaction
@@ -467,22 +323,23 @@ mtf_svy %>%
 
 :::: {.content-visible when-profile="speaker"}
 ::: notes
-descriptive statistics of the sample.\
-Also include these variables in our full models.
+descriptive statistics of the sample.  
+Also include these variables in our full models.  
 :::
 ::::
+
 
 # Findings {#slide9-id data-menu-title="Results"}
 
 :::: {.content-visible when-profile="speaker"}
 ::: notes
-stepwise ordinal logistic regression models:
+stepwise ordinal logistic regression models:  
 
-1.  year + year^2^\
-2.  added all control variables\
-3.  interacted year and gender.
+1.  year + year^2^  
+2.  added all control variables  
+3.  interacted year and gender.  
 
-show the predicted % rather than tables of coef.
+show the predicted % rather than tables of coef.  
 :::
 ::::
 
@@ -524,8 +381,10 @@ df_pp$cat <- factor(df_pp$cat,
 
 ```
 
-::::: r-stack
-::: fragment
+::: r-stack
+
+:::: {.fragment}
+
 ```{r warning = FALSE, fig.width=14, fig.asp=.6}
 
 lables_year <- c("'76", "'92", "'08", "'23")
@@ -555,9 +414,11 @@ df_pp %>%
         title    = "% who think they will be 'very good' as a ____________")
 
 ```
-:::
 
-::: fragment
+::::
+
+:::: {.fragment}
+
 ```{r warning = FALSE, fig.width=14, fig.asp=.6}
 
 lables_year <- c("'76", "'92", "'08", "'23")
@@ -583,31 +444,35 @@ df_pp %>%
         y        = " ",
         title    = "% who think they will be '__________' as a ____________")
 ```
+
+::::
+
 :::
-:::::
 
 ::: aside
-Predicted % from ordinal logistic regression with year + year^2^
-:::
+Predicted % from ordinal logistic regression with year + year^2^  
+::: 
 
 :::: {.content-visible when-profile="speaker"}
 ::: notes
-[**\<click\>**]{style="color: #E74C3C;"}\
-- predicted % of 'very good' in each role without controls.\
-- 45+ years, youth felt most confident about being a good worker\
-- became more positive about all roles from mid-1970s through 2000.\
-- stable until the mid-2000s, after less likely to believe 'very good' in these roles.
 
 [**\<click\>**]{style="color: #E74C3C;"}\
-- youth returned to seeing themselves as ‘good,’ and to a lesser extent ‘fairly good,’\
-- unlikely to see themselves as ‘poor’ or ‘not so good’
+-   predicted % of 'very good' in each role without controls.  
+-   45+ years, youth felt most confident about being a good worker  
+-   became more positive about all roles from mid-1970s through 2000.  
+-   stable until the mid-2000s, after less likely to believe 'very good' in these roles.   
 
-Model 2: gender + control variables -- coefficients for year and year^2^ steady and remain statistically significant for all three adult roles, trends over time are robust.
+[**\<click\>**]{style="color: #E74C3C;"}\
+-   youth returned to seeing themselves as ‘good,’ and to a lesser extent ‘fairly good,’   
+-   unlikely to see themselves as ‘poor’ or ‘not so good’  
+
+Model 2: gender + control variables -- coefficients for year and year^2^ steady and remain statistically significant for all three adult roles, trends over time are robust.  
+
 :::
 ::::
 
 ##  {#slide11-id data-menu-title="Figure 2"}
-
+  
 ```{r warning = FALSE, fig.width=18, fig.asp=.6}
 
 polr2.sp.RS  <- polr(gdsp ~ year.c * sex + I(year.c^2) * sex +
@@ -686,51 +551,43 @@ Predicted % from ordinal logistic regression with year, year^2^, gender, mom's e
 
 :::: {.content-visible when-profile="speaker"}
 ::: notes
--   expectations of ‘very good’ **spouse & parent** increased for both for first 30 survey years\
-
--   increases were steeper for young men than young women (p \<.001).\
-
--   gender gap largest in the mid 1970s & 1980s and narrowed over time.\
-
--   In 2000s, ‘very good’ as a spouse or parent decreased for both young men and young women.\
-
--   mid-2000s, increasingly likely to expect to be “good” or, to a lesser extent, “fairly good” spouse or parent.
-
--   ‘very good’ **worker** showed different patterns for young men compared with young women.\
-
--   About 65% of young men expected “very good” worker across all the survey years.\
-
--   young women’s “very good” worker increased from 55% in 1976 to 68% by 2004, surpassing the proportions for young men.\
-
--   young women’s expectations dropped thereafter, diminishing to 62% by 2023.
-
-Very few expected to be “poor” or “not so good” in all three adult roles across the survey years
+-   expectations of ‘very good’ **spouse & parent** increased for both for first 30 survey years  
+-   increases were steeper for young men than young women (p <.001).  
+-   gender gap largest in the mid 1970s & 1980s and narrowed over time.  
+-   In 2000s, ‘very good’ as a spouse or parent decreased for both young men and young women.  
+-   mid-2000s, increasingly likely to expect to be “good” or, to a lesser extent, “fairly good” spouse or parent.  
+  
+-   ‘very good’ **worker** showed different patterns for young men compared with young women.  
+-    About 65% of young men expected “very good” worker across all the survey years.  
+-    young women’s “very good” worker increased from 55% in 1976 to 68% by 2004, surpassing the proportions for young men.  
+-    young women’s expectations dropped thereafter, diminishing to 62% by 2023.  
+  
+Very few expected to be “poor” or “not so good” in all three adult roles across the survey years  
 :::
 ::::
 
-# Expectations
-add new graph here
-
-# Mom's Education
-add new graph here
-
 # Next Steps {#slide12-id data-menu-title="Implications"}
 
-::: {.fragment .custom .blur}
--   Link with actual marriage/parenthood transitions\
+::: {.fragment .custom .blur}  
+-   Expectations for marriage/parenthood  
+:::
+
+::: {.fragment .custom .blur}  
+-   Mom's education & racial identity  
+:::
+
+::: {.fragment .custom .blur}  
+-   Link with actual marriage/parenthood transitions  
 :::
 
 :::: {.content-visible when-profile="speaker"}
 ::: notes
 [**\<click\>**]{style="color: #E74C3C;"}\
-- MTF asked about mar/par expectations.
-Limit subsample or see if correlated.\
+-   MTF asked about mar/par expectations. Limit subsample or see if correlated.   
 [**\<click\>**]{style="color: #E74C3C;"}\
-- Think about diversity in terms of class or racial identity.
-Somewhat limited in variables.\
+-   Think about diversity in terms of class or racial identity. Somewhat limited in variables.  
 [**\<click\>**]{style="color: #E74C3C;"}\
-- Restricted panel data until age 30.
-Did fulfill these roles?
+-   Restricted panel data until age 30. Did fulfill these roles?  
 :::
 ::::
 
