@@ -493,7 +493,7 @@ show the predicted % rather than tables of coef.
 
 ## {#Bivariate-id data-menu-title="Bivariate Trends"}
 
-```{r warning = FALSE, fig.width=13, fig.asp=.7}
+```{r warning = FALSE, fig.width=14, fig.asp=.6}
 
 avg_sp <- mtf_svy %>%
   select(year, gdsp_v) %>%
@@ -536,23 +536,28 @@ data_max.avg <- df_avg %>%
   group_by(cat) %>%
   top_n(1, vals) 
 
+labels_year <- c("'76", "'92", "'08", "'23")
+
 df_avg %>%
   ggplot(aes(x = year, y = vals, color = cat, 
              ymin = vals_low, ymax = vals_upp)) +
     geom_ribbon(fill = "lightgrey", linetype = "dotted", alpha=0.1) +
     geom_line(linewidth = 3, alpha = .6) +
   geom_point(size = 4) +
-  geom_text_repel(aes(label = label), data = data_ends.avg, size = 8, nudge_x = 5, segment.color = 'transparent') +
+  geom_text_repel(aes(label = label), data = data_ends.avg, size = 8, nudge_x = 8, segment.color = 'transparent') +
   geom_text_repel(aes(label = scales::percent(vals, 1)), data = data_max.avg, size = 5, nudge_y = .02, segment.color = 'transparent') +
-  theme_minimal(28) +
+  theme_minimal(30) +
   theme(
-    legend.position = "none",
-    plot.title.position = "plot",
-    panel.grid.minor    = element_blank(),
-    plot.caption        = element_text(color = "grey70", size = 16)) +
+      plot.title          = element_text(face = "bold"),
+      plot.title.position = "plot",
+      strip.text.x        = element_text(face = "bold"),
+      legend.position     = "none",
+      panel.grid.minor    = element_blank(),
+      panel.spacing       = unit(1.1, "cm", data = NULL),
+      plot.caption        = element_text(color = "grey70", size = 16)) +
     scale_color_manual(values = c("#9966FF", "#18BC9C", "#e74c3c")) +
   guides(color = guide_legend(reverse=TRUE)) +
-  scale_x_continuous(limits = c(1976, 2030), breaks = c(1975, 1985, 1995, 2005, 2015, 2025)) +
+  scale_x_continuous(limits = c(1975, 2032), breaks = c(1976, 1992, 2008, 2025), labels = labels_year) +
   scale_y_continuous(limits = c(0, .75), breaks = c(0, .25, .50, .75), labels = percent) +
   labs( x        = " ", 
         y        = " ", 
@@ -621,12 +626,14 @@ df_pp %>%
   geom_line(linewidth = 2.5) +
   facet_wrap(~cat) +
   theme_minimal(30) + 
-  theme(#legend.position = c(1, 0),
-    #legend.justification = c(1, 0),
-    legend.position     = "none",
-    legend.title        = element_blank(),
-    strip.text.x        = element_text(face = "bold"),
-    panel.grid.minor    = element_blank()) +
+  theme(
+      plot.title          = element_text(face = "bold"),
+      plot.title.position = "plot",
+      strip.text.x        = element_text(face = "bold"),
+      legend.position     = "none",
+      panel.grid.minor    = element_blank(),
+      panel.spacing       = unit(1.1, "cm", data = NULL),
+      plot.caption        = element_text(color = "grey70", size = 16)) +
   scale_y_continuous(breaks = c(0., .25, .5, .75), limits=c(0, .75), labels = scales::percent) +
   scale_x_continuous(breaks = c(-20.55, -4.55, 11.45, 26.45), labels = lables_year) +
   scale_color_manual(values = c("#18BC9C", "#9966FF", "#e74c3c")) +
@@ -650,13 +657,14 @@ df_pp %>%
   geom_line(linewidth = 1.5) +
   facet_wrap(~response.level) +
   theme_minimal(30) + 
-  theme(#legend.position = c(1, 0),
-    #legend.justification = c(1, 0),
-    legend.position = "right",
-    legend.title=element_blank(),
-    strip.text.x = element_text(face = "bold"),
-    panel.grid.minor = element_blank(),
-    panel.spacing = unit(1.1, "cm", data = NULL)) +
+  theme(
+      plot.title          = element_text(face = "bold"),
+      plot.title.position = "plot",
+      strip.text.x        = element_text(face = "bold"),
+      legend.position     = "none",
+      panel.grid.minor    = element_blank(),
+      panel.spacing       = unit(1.1, "cm", data = NULL),
+      plot.caption        = element_text(color = "grey70", size = 16)) +
   scale_y_continuous(breaks = c(0., .25, .5), limits=c(0, .5), labels = scales::percent) +
   scale_x_continuous(breaks=c(-20.55, -4.55, 11.45, 26.45), labels = lables_year) +
   scale_color_manual(values = c("#18BC9C", "#9966FF", "#e74c3c")) +
@@ -668,7 +676,7 @@ df_pp %>%
 :::::
 
 ::: aside
-Predicted % from ordinal logistic regression with year, year^2^, gender, mom's edu., race, & region.
+Predicted % from ordinal logistic regression adjusting for gender, mother's education, race, & region.
 :::
 
 :::: {.content-visible when-profile="speaker"}
@@ -759,13 +767,14 @@ df_pp_sex %>%
   geom_text_repel(aes(label = group), data = data_min.sex %>% filter(cat == "Spouse"), 
                   size = 8, nudge_x = 3, nudge_y = .05, segment.color = 'transparent', color = "grey30") +
   theme_minimal(30) +
-  theme(#legend.position = c(1, 0),
-    #legend.justification = c(1, 0),
-    #   plot.title = element_text(face = "bold"),
-    legend.position  = "none",
-    strip.text.x     = element_text(face = "bold"),
-    panel.grid.minor = element_blank(),
-    panel.spacing    = unit(1.1, "cm", data = NULL)) +
+  theme(
+      plot.title          = element_text(face = "bold"),
+      plot.title.position = "plot",
+      strip.text.x        = element_text(face = "bold"),
+      legend.position     = "none",
+      panel.grid.minor    = element_blank(),
+      panel.spacing       = unit(1.1, "cm", data = NULL),
+      plot.caption        = element_text(color = "grey70", size = 16)) +
   scale_y_continuous(breaks = c(0., .25, .5, .75), limits=c(0, .75), labels = scales::percent) +
   scale_x_continuous(breaks=c(-20.55, -4.55, 11.45, 26.45), labels = lables_year) +
   scale_color_manual(values = c("#18BC9C", "#3498DB", "#9966FF","#F39C12", "#e74c3c")) +
@@ -791,13 +800,14 @@ df_pp_sex %>%
   geom_text_repel(aes(label = group), data = data_min.sex %>% filter(cat == "Parent"), 
                   size = 8, nudge_x = 3, nudge_y = .05, segment.color = 'transparent', color = "grey30") +
   theme_minimal(30) +
-  theme(#legend.position = c(1, 0),
-    #legend.justification = c(1, 0),
-    #   plot.title = element_text(face = "bold"),
-    legend.position  = "none",
-    strip.text.x     = element_text(face = "bold"),
-    panel.grid.minor = element_blank(),
-    panel.spacing    = unit(1.1, "cm", data = NULL)) +
+  theme(
+      plot.title          = element_text(face = "bold"),
+      plot.title.position = "plot",
+      strip.text.x        = element_text(face = "bold"),
+      legend.position     = "none",
+      panel.grid.minor    = element_blank(),
+      panel.spacing       = unit(1.1, "cm", data = NULL),
+      plot.caption        = element_text(color = "grey70", size = 16)) +
   scale_y_continuous(breaks = c(0., .25, .5, .75), limits=c(0, .75), labels = scales::percent) +
   scale_x_continuous(breaks=c(-20.55, -4.55, 11.45, 26.45), labels = lables_year) +
   scale_color_manual(values = c("#18BC9C", "#3498DB", "#9966FF","#F39C12", "#e74c3c")) +
@@ -824,13 +834,14 @@ df_pp_sex %>%
   geom_text_repel(aes(label = group), data = data_min.sex %>% filter(cat == "Worker"), 
                   size = 8, nudge_x = 3, nudge_y = .03, segment.color = 'transparent', color = "grey30") +
   theme_minimal(30) +
-  theme(#legend.position = c(1, 0),
-    #legend.justification = c(1, 0),
-    #   plot.title = element_text(face = "bold"),
-    legend.position  = "none",
-    strip.text.x     = element_text(face = "bold"),
-    panel.grid.minor = element_blank(),
-    panel.spacing    = unit(1.1, "cm", data = NULL)) +
+  theme(
+      plot.title          = element_text(face = "bold"),
+      plot.title.position = "plot",
+      strip.text.x        = element_text(face = "bold"),
+      legend.position     = "none",
+      panel.grid.minor    = element_blank(),
+      panel.spacing       = unit(1.1, "cm", data = NULL),
+      plot.caption        = element_text(color = "grey70", size = 16)) +
   scale_y_continuous(breaks = c(0., .25, .5, .75), limits=c(0, .75), labels = scales::percent) +
   scale_x_continuous(breaks=c(-20.55, -4.55, 11.45, 26.45), labels = lables_year) +
   scale_color_manual(values = c("#18BC9C", "#3498DB", "#9966FF","#F39C12", "#e74c3c")) +
@@ -847,7 +858,7 @@ df_pp_sex %>%
 
 
 ::: aside
-Predicted % from ordinal logistic regression with year, year^2^, gender, mom's edu., race, & region
+Predicted % from ordinal logistic regression adjusting for mother's education, race, & region.
 :::
 
 :::: {.content-visible when-profile="speaker"}
@@ -908,6 +919,9 @@ exp_min.sex <- df_prop_sex %>%
   group_by(cat, response) %>%
   slice_min(year, n = 1) %>%
   filter(response == 1)
+
+labels_year <- c("'76", "'92", "'08", "'23")
+
 ```
 
 ```{r warning = FALSE, fig.width=14, fig.asp=.6}
@@ -930,13 +944,16 @@ df_prop_sex %>%
   theme_minimal(30) +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1), 
                      limits = c(0, 1)) +
-  scale_x_continuous(limits = c(1976, 2030), breaks = c(1975, 1985, 1995, 2005, 2015, 2025)) +
+  scale_x_continuous(limits = c(1975, 2030), breaks = c(1976, 1992, 2008, 2025), labels = labels_year) +
   scale_color_manual(values = c("#3498DB", "#E74C3C")) +
-    theme(
-    legend.position = "none",
-    plot.title.position = "plot",
-    panel.grid.minor    = element_blank(),
-    plot.caption        = element_text(color = "grey70", size = 16)) +
+  theme(
+      plot.title          = element_text(face = "bold"),
+      plot.title.position = "plot",
+      strip.text.x        = element_text(face = "bold"),
+      legend.position     = "none",
+      panel.grid.minor    = element_blank(),
+      panel.spacing       = unit(1.1, "cm", data = NULL),
+      plot.caption        = element_text(color = "grey70", size = 16)) +
   labs(
     title    = "% of U.S. high school seniors who think they will _________",
     x        = NULL,
@@ -1048,10 +1065,10 @@ table <- modelsummary(mods,
 table
 ```
 
-## Sub-sample of expectations
 
-```{r warning = FALSE, fig.width=14, fig.asp=.6}
+##  {#sub-id data-menu-title="Subsample by expectations"}
 
+```{r warning = FALSE}
 
 ## Models with subsamples
 polr2.sp.mar  <- polr(gdsp ~ year.c * sex + I(year.c^2) * sex + 
@@ -1067,8 +1084,11 @@ pp_sp_sex_sub   <- predict_response(polr2.sp.mar, terms = c("year.c [all]", "sex
 pp_pa_sex_sub   <- predict_response(polr2.pa.kids, terms = c("year.c [all]", "sex"))
 
 ## Combine dfs
-pp_sp_sex_sub$cat    <- "Spouse \n (think will marry)" 
-pp_pa_sex_sub$cat    <- "Parent \n (if marry, very likely have kids)" 
+pp_sp_sex_sub$cat    <- "Spouse" 
+pp_pa_sex_sub$cat    <- "Parent" 
+
+pp_sp_sex_sub$sample  <- "think will 'get married'" 
+pp_pa_sex_sub$sample  <- "if marry, very likely have kids" 
 
 df_pp_sex_sub <- rbind(pp_sp_sex_sub, pp_pa_sex_sub)
 
@@ -1079,36 +1099,113 @@ df_pp_sex_sub$response.level <- factor(df_pp_sex_sub$response.level,
                                             "Fairly good", 
                                             "Not so good", 
                                             "Poor"))
-df_pp_sex_sub$cat <- factor(df_pp_sex_sub$cat, 
-                        levels=c("Spouse \n (think will marry)", 
-                                 "Parent \n (if marry, very likely have kids)"))
 
-lables_year <- c("1976", "1985", "1995", "2005", "2015", "2023")
+## Combine dfs
+df_pp_sex$sample      <- "full sample" 
 
-df_pp_sex_sub %>%
+df_pp_p3 <- rbind(df_pp_sex, df_pp_sex_sub)
+
+
+df_pp_p3$sample <- factor(df_pp_p3$sample, 
+                       levels=c(
+                         "full sample",
+                         "think will 'get married'",
+                         "if marry, very likely have kids"))
+
+lables_year <- c("'76", "'92", "'08", "'23")
+
+data_max.sub <- df_pp_p3 %>%
+  group_by(response.level) %>%
+  slice_max(x, n = 1) %>%
+  filter(group == "Men")
+
+data_min.sub <- df_pp_p3 %>%
+  group_by(response.level) %>%
+  slice_min(x, n = 1) %>%
+  filter(response.level == "Very good")
+
+```
+
+
+::::: r-stack
+
+```{r warning = FALSE, fig.width=14, fig.asp=.6}
+
+df_pp_p3 %>%
+    filter(cat == "Spouse") %>%
   ggplot(aes(x = x, y = predicted, color = response.level,
              ymin = conf.low, ymax = conf.high)) +
   #  geom_errorbar(width = 0.2, color="grey80") +
   geom_line(aes(linetype = group), linewidth = 2) +
-  facet_wrap(~cat) +
+  geom_text_repel(aes(label = response.level), data = data_max.sub %>% filter(cat == "Spouse"), 
+                  size = 8, nudge_x = 5, segment.color = 'transparent') +
+  geom_text_repel(aes(label = group), data = data_min.sub %>% filter(cat == "Spouse"), 
+                  size = 8, nudge_x = 3, nudge_y = .07, segment.color = 'transparent', color = "grey30") +
+  facet_wrap(~sample, ncol = 4) +
   theme_minimal(30) +
-  theme(#legend.position = c(1, 0),
-    #legend.justification = c(1, 0),
-    #   plot.title = element_text(face = "bold"),
-    legend.position  = "right",
-    strip.text.x     = element_text(face = "bold"),
-    panel.grid.minor = element_blank(),
-    panel.spacing    = unit(1.1, "cm", data = NULL)) +
+  theme(
+      plot.title          = element_text(face = "bold"),
+      plot.title.position = "plot",
+      strip.text.x        = element_text(face = "bold"),
+      legend.position     = "none",
+      panel.grid.minor    = element_blank(),
+      panel.spacing       = unit(1.1, "cm", data = NULL),
+      plot.caption        = element_text(color = "grey70", size = 16)) +
   scale_y_continuous(breaks = c(0., .25, .5, .75), limits=c(0, .75), labels = scales::percent) +
-  scale_x_continuous(breaks=c(-20.55, -11.55, -1.55, 8.45, 18.14, 26.45), labels = lables_year) +
-  labs( x        = " ", 
-        y        = " ",
-        color    = "Response level",
-        linetype = " ",
-        caption  = "Monitoring the Future 12th Grade Surveys (1976-2023)") 
-
+  scale_x_continuous(breaks=c(-20.55, -4.55, 11.45, 26.45), limits=c(-21, 35), labels = lables_year) +
+  scale_color_manual(values = c("#18BC9C", "#3498DB", "#9966FF","#F39C12", "#e74c3c")) +
+  labs( 
+    title    = "% who think they will be ' __________' as a spouse",
+#    subtitle = "for the full sample and only youth expecting to get married",
+    x        = " ", 
+    y        = " ",
+    color    = "Response level",
+    linetype = " ",
+    caption  = "Monitoring the Future 12th Grade Surveys (1976-2023)") 
 
 ```
+
+
+::: {.fragment fragment-index=1}
+```{r warning = FALSE, fig.width=14, fig.asp=.6}
+
+df_pp_p3 %>%
+    filter(cat == "Parent") %>%
+  ggplot(aes(x = x, y = predicted, color = response.level,
+             ymin = conf.low, ymax = conf.high)) +
+  #  geom_errorbar(width = 0.2, color="grey80") +
+  geom_line(aes(linetype = group), linewidth = 2) +
+  geom_text_repel(aes(label = response.level), data = data_max.sub %>% filter(cat == "Parent"), 
+                  size = 8, nudge_x = 5, segment.color = 'transparent') +
+  geom_text_repel(aes(label = group), data = data_min.sub %>% filter(cat == "Parent"), 
+                  size = 8, nudge_x = 0, nudge_y = .07, segment.color = 'transparent', color = "grey30") +
+  facet_wrap(~sample, ncol = 4) +
+  theme_minimal(30) +
+  theme(
+      plot.title          = element_text(face = "bold"),
+      plot.title.position = "plot",
+      strip.text.x        = element_text(face = "bold"),
+      legend.position     = "none",
+      panel.grid.minor    = element_blank(),
+      panel.spacing       = unit(1.1, "cm", data = NULL),
+      plot.caption        = element_text(color = "grey70", size = 16)) +
+  scale_y_continuous(breaks = c(0., .25, .5, .75), limits=c(0, .75), labels = scales::percent) +
+  scale_x_continuous(breaks=c(-20.55, -4.55, 11.45, 26.45), limits=c(-21, 35), labels = lables_year) +
+  scale_color_manual(values = c("#18BC9C", "#3498DB", "#9966FF","#F39C12", "#e74c3c")) +
+  labs( 
+    title    = "% who think they will be ' __________' as a parent",
+#    subtitle = "for the full sample and only youth very likely to have children",
+    x        = " ", 
+    y        = " ",
+    color    = "Response level",
+    linetype = " ",
+    caption  = "Monitoring the Future 12th Grade Surveys (1976-2023)") 
+
+```
+
+:::
+
+:::::
 
 # Summary {#slide12-id data-menu-title="Summary"}
 
@@ -1156,5 +1253,59 @@ Thanks!
 ::::
 
 # Mom's Education
-add new graph here
+
+
+```{r warning = FALSE}
+
+polr2.sp.ses  <- polr(gdsp ~ year.c * momed + I(year.c^2) * momed +
+                       sex + race + region,
+                     data = data, weights = svyweight, Hess = T)
+
+polr2.pa.ses  <- polr(gdpa ~ year.c * momed + I(year.c^2) * momed  + 
+                       sex + race + region,
+                     data = data, weights = svyweight, Hess = T)
+
+polr2.wk.ses  <- polr(gdwk ~ year.c * momed + I(year.c^2) * momed  + 
+                       sex + race + region,
+                     data = data, weights = svyweight, Hess = T)
+
+## Average Predictions 
+pp_sp_ses   <- predict_response(polr2.sp.ses, terms = c("year.c [all]", "momed"))
+pp_pa_ses   <- predict_response(polr2.pa.ses, terms = c("year.c [all]", "momed"))
+pp_wk_ses   <- predict_response(polr2.wk.ses, terms = c("year.c [all]", "momed"))
+
+## Combine dfs
+pp_sp_ses$cat    <- "Spouse" 
+pp_pa_ses$cat    <- "Parent" 
+pp_wk_ses$cat    <- "Worker" 
+
+df_pp_ses <- rbind(pp_wk_ses, pp_sp_ses, pp_pa_ses)
+
+## Tidy variables
+df_pp_ses$response.level <- factor(df_pp_ses$response.level, 
+                                   levels=c("Very good", 
+                                            "Good", 
+                                            "Fairly good", 
+                                            "Not so good", 
+                                            "Poor"))
+
+df_pp_ses$cat <- factor(df_pp_ses$cat, 
+                        levels=c("Spouse", 
+                                 "Parent",
+                                 "Worker"))
+
+lables_year <- c("'76", "'92", "'08", "'23")
+
+data_max.ses <- df_pp_ses %>%
+  group_by(response.level) %>%
+  slice_max(x, n = 1) %>%
+  filter(group == "Men")
+
+data_min.ses <- df_pp_ses %>%
+  group_by(response.level) %>%
+  slice_min(x, n = 1) %>%
+  filter(response.level == "Very good")
+
+```
+
 

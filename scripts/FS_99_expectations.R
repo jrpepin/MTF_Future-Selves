@@ -398,6 +398,7 @@ p3 <- df_pp_p3 %>%
     panel.spacing    = unit(1.1, "cm", data = NULL)) +
   scale_y_continuous(breaks = c(0., .25, .5, .75), limits=c(0, .75), labels = scales::percent) +
   scale_x_continuous(breaks=c(-20.55, -11.55, -1.55, 8.45, 18.14, 26.45), labels = lables_year) +
+  scale_color_manual(values = c("#18BC9C", "#3498DB", "#9966FF","#F39C12", "#e74c3c")) +
   labs( 
     title    = "% who think they will be ' __________' as a ____________",
     subtitle = "for the full sample and only youth expecting to take on each role",

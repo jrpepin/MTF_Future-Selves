@@ -172,14 +172,14 @@
     "href": "Lund presentation.html#Mod2-id",
     "title": "Social Change in Future Selves:",
     "section": "",
-    "text": "Predicted % from ordinal logistic regression with year, year2, gender, mom’s edu., race, & region."
+    "text": "Predicted % from ordinal logistic regression adjusting for gender, mother’s education, race, & region."
   },
   {
     "objectID": "Lund presentation.html#Mod3-id",
     "href": "Lund presentation.html#Mod3-id",
     "title": "Social Change in Future Selves:",
     "section": "",
-    "text": "Predicted % from ordinal logistic regression with year, year2, gender, mom’s edu., race, & region"
+    "text": "Predicted % from ordinal logistic regression adjusting for mother’s education, race, & region."
   },
   {
     "objectID": "Lund presentation.html#ModEXP-id",
