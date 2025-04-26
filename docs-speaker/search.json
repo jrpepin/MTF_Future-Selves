@@ -194,5 +194,54 @@
     "title": "Social Change in Future Selves:",
     "section": "",
     "text": "expectations of ‘very good’ spouse & parent increased for both for first 30 survey years\n\nincreases were steeper for young men than young women (p &lt;.001).\n\ngender gap largest in the mid 1970s & 1980s and narrowed over time.\n\nIn 2000s, ‘very good’ as a spouse or parent decreased for both young men and young women.\n\nmid-2000s, increasingly likely to expect to be “good” or, to a lesser extent, “fairly good” spouse or parent.\n‘very good’ worker showed different patterns for young men compared with young women.\n\nAbout 65% of young men expected “very good” worker across all the survey years.\n\nyoung women’s “very good” worker increased from 55% in 1976 to 68% by 2004, surpassing the proportions for young men.\n\nyoung women’s expectations dropped thereafter, diminishing to 62% by 2023.\n\nVery few expected to be “poor” or “not so good” in all three adult roles across the survey years\n\n\nPredicted % from ordinal logistic regression with year, year2, gender, mom’s edu., race, & region"
+  },
+  {
+    "objectID": "Lund presentation.html#DVs-id",
+    "href": "Lund presentation.html#DVs-id",
+    "title": "Social Change in Future Selves:",
+    "section": "",
+    "text": "These next questions ask you to guess how well you might do in several different situations. How good do you think you would be as a:\n\n\n\n\n\nhusband or wife?\nparent?\nworker on a job?\n\n\n\n\nResponse options:\n\npoor\nnot so good\nfairly good\ngood\nvery good\n\n\n\n\n\nquestion prompt."
+  },
+  {
+    "objectID": "Lund presentation.html#IVs-id",
+    "href": "Lund presentation.html#IVs-id",
+    "title": "Social Change in Future Selves:",
+    "section": "Key IVs",
+    "text": "Key IVs\n\n\n\nYear\nYear2\nGender\n\n\n\n\n\n\n\n\n\nRQ1: changes over time: year\nnonlinearity: year squared.\nRQ2: gender & year interaction"
+  },
+  {
+    "objectID": "Lund presentation.html#Sample-id",
+    "href": "Lund presentation.html#Sample-id",
+    "title": "Social Change in Future Selves:",
+    "section": "Sample",
+    "text": "Sample\n\n\n\n\n\n\n\n\n\n\n\n\nVariable\nOverall N = 99,399 (100%)\nMen N = 47,369 (48%)\nWomen N = 52,030 (52%)\n\n\n\n\nMom completed college\n33%\n34%\n31%\n\n\nRace identity\n\n\n\n\n\n\n\n\n    White\n71%\n73%\n70%\n\n\n    Black\n11%\n9.4%\n12%\n\n\n    Another race\n18%\n18%\n18%\n\n\nRegion\n\n\n\n\n\n\n\n\n    Northeast\n20%\n19%\n20%\n\n\n    Midwest\n27%\n27%\n27%\n\n\n    South\n34%\n34%\n34%\n\n\n    West\n19%\n19%\n19%\n\n\n\n\n\n\ndescriptive statistics of the sample.\nAlso include these variables in our full models."
+  },
+  {
+    "objectID": "Lund presentation.html#Mod2-id",
+    "href": "Lund presentation.html#Mod2-id",
+    "title": "Social Change in Future Selves:",
+    "section": "",
+    "text": "&lt;click&gt;\n- predicted % of ‘very good’ in each role without controls.\n- 45+ years, youth felt most confident about being a good worker\n- became more positive about all roles from mid-1970s through 2000.\n- stable until the mid-2000s, after less likely to believe ‘very good’ in these roles.\n&lt;click&gt;\n- youth returned to seeing themselves as ‘good,’ and to a lesser extent ‘fairly good,’\n- unlikely to see themselves as ‘poor’ or ‘not so good’\nModel 2: gender + control variables – coefficients for year and year2 steady and remain statistically significant for all three adult roles, trends over time are robust.\n\n\nPredicted % from ordinal logistic regression with year, year2, gender, mom’s edu., race, & region."
+  },
+  {
+    "objectID": "Lund presentation.html#Mod3-id",
+    "href": "Lund presentation.html#Mod3-id",
+    "title": "Social Change in Future Selves:",
+    "section": "",
+    "text": "expectations of ‘very good’ spouse & parent increased for both for first 30 survey years\n\nincreases were steeper for young men than young women (p &lt;.001).\n\ngender gap largest in the mid 1970s & 1980s and narrowed over time.\n\nIn 2000s, ‘very good’ as a spouse or parent decreased for both young men and young women.\n\nmid-2000s, increasingly likely to expect to be “good” or, to a lesser extent, “fairly good” spouse or parent.\n‘very good’ worker showed different patterns for young men compared with young women.\n\nAbout 65% of young men expected “very good” worker across all the survey years.\n\nyoung women’s “very good” worker increased from 55% in 1976 to 68% by 2004, surpassing the proportions for young men.\n\nyoung women’s expectations dropped thereafter, diminishing to 62% by 2023.\n\nVery few expected to be “poor” or “not so good” in all three adult roles across the survey years\n\n\nPredicted % from ordinal logistic regression with year, year2, gender, mom’s edu., race, & region"
+  },
+  {
+    "objectID": "Lund presentation.html#ModEXP-id",
+    "href": "Lund presentation.html#ModEXP-id",
+    "title": "Social Change in Future Selves:",
+    "section": "",
+    "text": "Models adjusted for marital and parenthood expectations\n\n\n SpouseParents full modelwith expectationsfull modelwith expectations coef.S.E.coef.S.E.coef.S.E.coef.S.E.Year1.011***0.0001.015***0.0011.009***0.0001.012***0.001Year20.999***0.0000.999***0.0000.999***0.0001.000***0.000Women1.217***0.0121.070***0.0191.162***0.0121.174***0.020Year * Women0.991***0.0010.996***0.001Year2 * Women1.000**0.0001.000**0.000Not getting married0.113***0.034I have no idea0.306***0.018Fairly likely0.347***0.016Unlikely/Uncertain0.121***0.019"
+  },
+  {
+    "objectID": "Lund presentation.html#sub-sample-of-expectations",
+    "href": "Lund presentation.html#sub-sample-of-expectations",
+    "title": "Social Change in Future Selves:",
+    "section": "Sub-sample of expectations",
+    "text": "Sub-sample of expectations\nadd new graph here"
   }
 ]

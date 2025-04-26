@@ -220,7 +220,7 @@ p1 + plot_spacer() + p2 + plot_layout(widths = c(4, .25 ,4))
 
 ::: {.incremental style="font-size: 150%"}
 -   [Caring for a spouse]{style="color: #18BC9C"}
--   [In-direct care]{style="color: #18BC9C"}
+-   [In-direct care]{style="color: #E74C3C"}
 :::
 
 :::: {.content-visible when-profile="speaker"}
