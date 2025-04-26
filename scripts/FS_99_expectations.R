@@ -247,7 +247,7 @@ table
 ## Now, let's subset the sample to only expected spouses and parents
 
 
-## Models with expectations as controls
+## Models with subsamples
 polr2.sp.mar  <- polr(gdsp ~ year.c * sex + I(year.c^2) * sex + 
                         momed + race + region,
                       data=subset(data, mar3=="Getting married"), weights = svyweight, Hess = T)
