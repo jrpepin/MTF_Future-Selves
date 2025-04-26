@@ -244,7 +244,7 @@ table
 
 # Table 5 ----------------------------------------------------------------------
 
-## Now, let's subset the sample to only marital and parental expectations
+## Now, let's subset the sample to only expected spouses and parents
 
 
 ## Models with expectations as controls

@@ -874,6 +874,53 @@ Very few expected to be “poor” or “not so good” in all three adult roles
 :::
 ::::
 
+# Robustness Check
+
+##  {#EXP-id data-menu-title="Expectations Trends"}
+
+```{r warning = FALSE, fig.width=14, fig.asp=.6}
+p_mardum_sex <- mtf_svy %>%
+  filter(!is.na(mardum)) %>%
+  group_by(year, sex, mardum) %>%
+  summarize(vals  = survey_mean(vartype = "ci"))
+
+p_kidsdum_sex <- mtf_svy %>%
+  filter(!is.na(kidsdum)) %>%
+  group_by(year, sex, kidsdum) %>%
+  summarize(vals  = survey_mean(vartype = "ci"))
+
+p_mardum_sex$cat   <- "mardum" 
+p_kidsdum_sex$cat  <- "kidsdum" 
+
+colnames(p_mardum_sex)[colnames(p_mardum_sex)=="mardum"]    <- "response"
+colnames(p_kidsdum_sex)[colnames(p_kidsdum_sex)=="kidsdum"] <- "response"
+
+df_prop_sex <- rbind(p_mardum_sex, p_kidsdum_sex)
+
+df_prop_sex %>%
+  filter(response == 1) %>%
+  ggplot(aes(x = year, y = vals, ymin = vals_low, ymax = vals_upp,
+             colour = cat)) +
+  geom_line(aes(linetype = sex), linewidth = 2, alpha = .6) +
+  geom_errorbar(alpha = .2) +
+  geom_point(size = 4) +
+  theme_minimal(30) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1), 
+                     limits = c(0, 1)) +
+  scale_x_continuous(limit  = c(1976, 2025)) +
+  scale_color_manual(breaks = c("mardum","kidsdum"),
+                     labels = c("get married", "if married, have children"), 
+                     values = c("#18BC9C", "#9966FF")) +
+  theme(legend.position = "top") +
+  labs(
+    title    = "% of U.S. high school seniors who think they will _________",
+    x        = NULL,
+    y        = NULL,
+    color    = NULL,
+    caption  = "Monitoring the Future 12th Grade Surveys (1976-2023)")
+
+```
+
 ##  {#ModEXP-id data-menu-title="Adjusted for expectations"}
 
 Models adjusted for marital and parenthood expectations  
@@ -977,8 +1024,66 @@ table
 ```
 
 ## Sub-sample of expectations
-add new graph here
 
+```{r warning = FALSE, fig.width=14, fig.asp=.6}
+
+
+## Models with subsamples
+polr2.sp.mar  <- polr(gdsp ~ year.c * sex + I(year.c^2) * sex + 
+                        momed + race + region,
+                      data=subset(data, mar3=="Getting married"), weights = svyweight, Hess = T)
+
+polr2.pa.kids <- polr(gdpa ~ year.c * sex + I(year.c^2) * sex  +
+                        momed + race + region,
+                      data=subset(data, kids3=="Very likely"), weights = svyweight, Hess = T)
+
+## Average Predictions 
+pp_sp_sex_sub   <- predict_response(polr2.sp.mar, terms = c("year.c [all]", "sex"))
+pp_pa_sex_sub   <- predict_response(polr2.pa.kids, terms = c("year.c [all]", "sex"))
+
+## Combine dfs
+pp_sp_sex_sub$cat    <- "Spouse \n (think will marry)" 
+pp_pa_sex_sub$cat    <- "Parent \n (if marry, very likely have kids)" 
+
+df_pp_sex_sub <- rbind(pp_sp_sex_sub, pp_pa_sex_sub)
+
+## Tidy variables
+df_pp_sex_sub$response.level <- factor(df_pp_sex_sub$response.level, 
+                                   levels=c("Very good", 
+                                            "Good", 
+                                            "Fairly good", 
+                                            "Not so good", 
+                                            "Poor"))
+df_pp_sex_sub$cat <- factor(df_pp_sex_sub$cat, 
+                        levels=c("Spouse \n (think will marry)", 
+                                 "Parent \n (if marry, very likely have kids)"))
+
+lables_year <- c("1976", "1985", "1995", "2005", "2015", "2023")
+
+df_pp_sex_sub %>%
+  ggplot(aes(x = x, y = predicted, color = response.level,
+             ymin = conf.low, ymax = conf.high)) +
+  #  geom_errorbar(width = 0.2, color="grey80") +
+  geom_line(aes(linetype = group), linewidth = 2) +
+  facet_wrap(~cat) +
+  theme_minimal(30) +
+  theme(#legend.position = c(1, 0),
+    #legend.justification = c(1, 0),
+    #   plot.title = element_text(face = "bold"),
+    legend.position  = "right",
+    strip.text.x     = element_text(face = "bold"),
+    panel.grid.minor = element_blank(),
+    panel.spacing    = unit(1.1, "cm", data = NULL)) +
+  scale_y_continuous(breaks = c(0., .25, .5, .75), limits=c(0, .75), labels = scales::percent) +
+  scale_x_continuous(breaks=c(-20.55, -11.55, -1.55, 8.45, 18.14, 26.45), labels = lables_year) +
+  labs( x        = " ", 
+        y        = " ",
+        color    = "Response level",
+        linetype = " ",
+        caption  = "Monitoring the Future 12th Grade Surveys (1976-2023)") 
+
+
+```
 
 # Summary {#slide12-id data-menu-title="Summary"}
 
