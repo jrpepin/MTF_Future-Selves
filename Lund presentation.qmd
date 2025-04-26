@@ -202,7 +202,7 @@ p1 + plot_spacer() + p2 + plot_layout(widths = c(4, .25 ,4))
 <br>
 
 ::: {style="font-size: 200%; font-family: 'Shadows Into Light'"}
-[**Motivation to give care**]{style="color: #E74C3C"}, across a variety of contexts and over the lifespan, [**is central to understanding life goals**]{style="color: #E74C3C"} and ultimately behavior
+[**Motivation to give care**]{style="color: #E74C3C"}, across a variety of contexts and over the lifespan, [**is central to understanding life goals**]{style="color: #E74C3C"} and ultimately behavior.
 :::
 
 :::: {.content-visible when-profile="speaker"}
@@ -607,6 +607,22 @@ df_pp$cat <- factor(df_pp$cat,
                              "Spouse", 
                              "Parent"))
 
+data_end <- df_pp %>%
+  group_by(response.level) %>%
+  slice_max(x, n = 1) %>%
+  filter(response.level == "Very good")
+
+data_min <- df_pp %>%
+  group_by(response.level) %>%
+  slice_min(x, n = 1) %>%
+  filter(response.level == "Very good")
+
+data_max <- df_pp %>%
+  group_by(cat, response.level) %>%
+  slice_max(predicted, n = 1) %>%
+  filter(response.level == "Very good")
+
+
 ```
 
 ::::: r-stack
@@ -624,6 +640,9 @@ df_pp %>%
   ggplot(aes(x = x, y = predicted, color = cat, 
              ymin = conf.low, ymax = conf.high)) +
   geom_line(linewidth = 2.5) +
+  geom_text_repel(aes(label = scales::percent(predicted, 1)), data = data_end, size = 6, nudge_y = .05, segment.color = 'transparent') +
+  geom_text_repel(aes(label = scales::percent(predicted, 1)), data = data_min, size = 6, nudge_y = -.04, segment.color = 'transparent') +
+  geom_text_repel(aes(label = scales::percent(predicted, 1)), data = data_max, size = 6, nudge_y = .03, segment.color = 'transparent') +
   facet_wrap(~cat) +
   theme_minimal(30) + 
   theme(
