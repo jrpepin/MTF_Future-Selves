@@ -467,7 +467,7 @@ mtf_svy %>%
     N = {style_number(n_unweighted)} ({style_percent(p)}%)") %>%
   modify_footnote(c(all_stat_cols()) ~ NA) %>%
   as_gt() %>%
-  gt::tab_options(table.font.size = 30)
+  gt::tab_options(table.font.size = 28)
 ```
 
 :::: {.content-visible when-profile="speaker"}
