@@ -1252,8 +1252,9 @@ Thanks!
 :::
 ::::
 
-# Mom's Education
+# Appendix
 
+##  {#MomEd-id data-menu-title="MomEd * Year Model"}
 
 ```{r warning = FALSE}
 
@@ -1299,7 +1300,7 @@ lables_year <- c("'76", "'92", "'08", "'23")
 data_max.ses <- df_pp_ses %>%
   group_by(response.level) %>%
   slice_max(x, n = 1) %>%
-  filter(group == "Men")
+  filter(group == "Completed college")
 
 data_min.ses <- df_pp_ses %>%
   group_by(response.level) %>%
@@ -1308,4 +1309,122 @@ data_min.ses <- df_pp_ses %>%
 
 ```
 
+::::: r-stack
 
+```{r warning = FALSE, fig.width=14, fig.asp=.6}
+
+## Draw figure
+
+df_pp_ses %>%
+  filter(cat == "Spouse") %>%
+  ggplot(aes(x = x, y = predicted, color = response.level,
+             ymin = conf.low, ymax = conf.high)) +
+  #  geom_errorbar(width = 0.2, color="grey80") +
+  geom_line(aes(linetype = group), linewidth = 2) +
+  geom_text_repel(aes(label = response.level), data = data_max.ses %>% filter(cat == "Spouse"), 
+                  size = 8, nudge_x = 5, segment.color = 'transparent') +
+  geom_text_repel(aes(label = group), data = data_min.ses %>% filter(cat == "Spouse"), 
+                  size = 8, nudge_x = 3, nudge_y = .05, segment.color = 'transparent', color = "grey30") +
+  theme_minimal(30) +
+  theme(
+      plot.title          = element_text(face = "bold"),
+      plot.title.position = "plot",
+      strip.text.x        = element_text(face = "bold"),
+      legend.position     = "none",
+      panel.grid.minor    = element_blank(),
+      panel.spacing       = unit(1.1, "cm", data = NULL),
+      plot.caption        = element_text(color = "grey70", size = 16)) +
+  scale_y_continuous(breaks = c(0., .25, .5, .75), limits=c(0, .75), labels = scales::percent) +
+  scale_x_continuous(breaks=c(-20.55, -4.55, 11.45, 26.45), labels = lables_year) +
+  scale_color_manual(values = c("#18BC9C", "#3498DB", "#9966FF","#F39C12", "#e74c3c")) +
+  labs( x        = " ", 
+        y        = " ",
+        color    = "Response level",
+        title    = "% who think they will be ' __________' as a spouse",
+        subtitle = "by mother's education",
+        linetype = " ")
+
+```
+
+::: {.fragment fragment-index=1}
+
+```{r warning = FALSE, fig.width=14, fig.asp=.6}
+df_pp_ses %>%
+  filter(cat == "Parent") %>%
+  ggplot(aes(x = x, y = predicted, color = response.level,
+             ymin = conf.low, ymax = conf.high)) +
+  #  geom_errorbar(width = 0.2, color="grey80") +
+  geom_line(aes(linetype = group), linewidth = 2) +
+  geom_text_repel(aes(label = response.level), data = data_max.ses %>% filter(cat == "Parent"), 
+                  size = 8, nudge_x = 5, segment.color = 'transparent') +
+  geom_text_repel(aes(label = group), data = data_min.ses %>% filter(cat == "Parent"), 
+                  size = 8, nudge_x = 3, nudge_y = .05, segment.color = 'transparent', color = "grey30") +
+  theme_minimal(30) +
+  theme(
+      plot.title          = element_text(face = "bold"),
+      plot.title.position = "plot",
+      strip.text.x        = element_text(face = "bold"),
+      legend.position     = "none",
+      panel.grid.minor    = element_blank(),
+      panel.spacing       = unit(1.1, "cm", data = NULL),
+      plot.caption        = element_text(color = "grey70", size = 16)) +
+  scale_y_continuous(breaks = c(0., .25, .5, .75), limits=c(0, .75), labels = scales::percent) +
+  scale_x_continuous(breaks=c(-20.55, -4.55, 11.45, 26.45), labels = lables_year) +
+  scale_color_manual(values = c("#18BC9C", "#3498DB", "#9966FF","#F39C12", "#e74c3c")) +
+  labs( x        = " ", 
+        y        = " ",
+        color    = "Response level",
+        title    = "% who think they will be ' __________' as a parent",
+        subtitle = "by mother's education",
+        linetype = " ")
+```
+
+:::
+
+::: {.fragment fragment-index=2}
+
+```{r warning = FALSE, fig.width=14, fig.asp=.6}
+df_pp_ses %>%
+  filter(cat == "Worker") %>%
+  ggplot(aes(x = x, y = predicted, color = response.level,
+             ymin = conf.low, ymax = conf.high)) +
+  #  geom_errorbar(width = 0.2, color="grey80") +
+  geom_line(aes(linetype = group), linewidth = 2) +
+  geom_text_repel(aes(label = response.level), data = data_max.ses %>% filter(cat == "Worker"), 
+                  size = 8, nudge_x = 5, segment.color = 'transparent') +
+  geom_text_repel(aes(label = group), data = data_min.ses %>% filter(cat == "Worker"), 
+                  size = 8, nudge_x = 3, nudge_y = .03, segment.color = 'transparent', color = "grey30") +
+  theme_minimal(30) +
+  theme(
+      plot.title          = element_text(face = "bold"),
+      plot.title.position = "plot",
+      strip.text.x        = element_text(face = "bold"),
+      legend.position     = "none",
+      panel.grid.minor    = element_blank(),
+      panel.spacing       = unit(1.1, "cm", data = NULL),
+      plot.caption        = element_text(color = "grey70", size = 16)) +
+  scale_y_continuous(breaks = c(0., .25, .5, .75), limits=c(0, .75), labels = scales::percent) +
+  scale_x_continuous(breaks=c(-20.55, -4.55, 11.45, 26.45), labels = lables_year) +
+  scale_color_manual(values = c("#18BC9C", "#3498DB", "#9966FF","#F39C12", "#e74c3c")) +
+  labs( x        = " ", 
+        y        = " ",
+        color    = "Response level",
+        title    = "% who think they will be ' __________' as a worker",
+        subtitle = "by mother's education",
+        linetype = " ")
+```
+
+:::
+
+::::: 
+
+
+::: aside
+Predicted % from ordinal logistic regression adjusting for gender, race, & region.
+:::
+
+:::: {.content-visible when-profile="speaker"}
+::: notes
+Thanks!
+:::
+::::
