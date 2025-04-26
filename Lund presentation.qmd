@@ -890,7 +890,7 @@ p_kidsdum_sex <- mtf_svy %>%
   summarize(vals  = survey_mean(vartype = "ci"))
 
 p_mardum_sex$cat   <- "get married" 
-p_kidsdum_sex$cat  <- "if married, have children" 
+p_kidsdum_sex$cat  <- "very likely have children \n (if married)" 
 
 colnames(p_mardum_sex)[colnames(p_mardum_sex)=="mardum"]    <- "response"
 colnames(p_kidsdum_sex)[colnames(p_kidsdum_sex)=="kidsdum"] <- "response"
@@ -902,31 +902,41 @@ exp_max.sex <- df_prop_sex %>%
   slice_max(year, n = 1) %>%
   filter(response == 1)
 
-#exp_max.sex$label <- paste(scales::percent(exp_max.sex$vals, 1), exp_max.sex$cat)
+exp_max.sex$label <- paste(scales::percent(exp_max.sex$vals, 1), exp_max.sex$sex)
 
 exp_min.sex <- df_prop_sex %>%
   group_by(cat, response) %>%
   slice_min(year, n = 1) %>%
-  filter(response == 1 & cat == "get married")
+  filter(response == 1)
 ```
 
 ```{r warning = FALSE, fig.width=14, fig.asp=.6}
 df_prop_sex %>%
   filter(response == 1) %>%
   ggplot(aes(x = year, y = vals, ymin = vals_low, ymax = vals_upp,
-             colour = cat, shape = sex)) +
-  geom_line(aes(linetype = sex), linewidth = 2, alpha = .7) +
+             colour = sex, shape = sex)) +
+  geom_line(linewidth = 2, alpha = .7) +
   geom_errorbar(alpha = .2) +
-  geom_point(size = 4) +
- geom_text_repel(aes(label = cat), data = subset(exp_max.sex, sex == "Women"), 
-                 size = 9, nudge_y = -.03, nudge_x = 3, segment.color = 'transparent') +
- geom_text_repel(aes(label = sex), data = exp_min.sex, size = 8, nudge_y = .07, segment.color = 'transparent') +
+  geom_point(size = 3) +
+  facet_wrap(~cat) +
+  geom_text_repel(aes(label = label), data = subset(exp_max.sex, sex == "Men"), 
+                  size = 7, nudge_x = 5, nudge_y = .05, segment.color = 'transparent') +
+  geom_text_repel(aes(label = label), data = subset(exp_max.sex, sex == "Women"), 
+                  size = 7, nudge_x = 5, nudge_y = -.05, segment.color = 'transparent') +
+  geom_text_repel(aes(label = scales::percent(vals, 1)), data = subset(exp_min.sex, sex == "Men"), 
+                  size = 5, nudge_y = -.07, segment.color = 'transparent') +
+  geom_text_repel(aes(label = scales::percent(vals, 1)), data = subset(exp_min.sex, sex == "Women"), 
+                  size = 5, nudge_y = .05, segment.color = 'transparent') +
   theme_minimal(30) +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1), 
                      limits = c(0, 1)) +
   scale_x_continuous(limits = c(1976, 2030), breaks = c(1975, 1985, 1995, 2005, 2015, 2025)) +
-  scale_color_manual(values = c("#18BC9C", "#9966FF")) +
-  theme(legend.position = "none") +
+  scale_color_manual(values = c("#3498DB", "#E74C3C")) +
+    theme(
+    legend.position = "none",
+    plot.title.position = "plot",
+    panel.grid.minor    = element_blank(),
+    plot.caption        = element_text(color = "grey70", size = 16)) +
   labs(
     title    = "% of U.S. high school seniors who think they will _________",
     x        = NULL,
