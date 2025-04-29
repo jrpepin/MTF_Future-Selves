@@ -1,6 +1,6 @@
 ---
-title: "Social Change in Future Selves:"  
-subtitle: "A Portrait of Youths’ Views of Themselves in Adult Caring Roles"
+title: "Social Change in Anticipated Caring Roles:"  
+subtitle: "A Portrait of Young Americans' Views of their Future Selves"
 author: 
   - name: "<br> Joanna R. Pepin"
     affiliations: 
@@ -16,6 +16,7 @@ format:
     scrollable: true
     width: 1280 # default: 970
     height: 800 # default: 700
+    hash-type: number # urls use slide numbers
 embed-resources: true
 project:
   execute-dir: MTF_Possible-Selves
@@ -62,7 +63,52 @@ data$kids3 <- relevel(data$kids3, ref = 3)
 
 # Background
 
-##  {#famrates-id data-menu-title="Marriage and Parenthood Rates"}
+## Caregiving Ambitions Framework
+
+:::: {.content-visible when-profile="speaker"}
+::: notes
+Youth and their anticipated roles  
+Career but also caring roles of being a partner to someone, of having children as central  
+:::
+::::
+
+[Bear 2019](https://journals.aom.org/doi/10.5465/amr.2016.0424){target="_blank"}
+
+<br>
+
+::: {style="font-size: 200%; font-family: 'Shadows Into Light'"}
+[**Motivation to give care**]{style="color: #E74C3C"}, across a variety of contexts and over the lifespan, [**is central to understanding life goals**]{style="color: #E74C3C"} and ultimately behavior.
+:::
+
+:::: {.content-visible when-profile="speaker"}
+::: notes
+-   proposes that motivation to give care, across a variety of contexts and over the lifespan, central to understanding life goals and ultimately behavior.
+:::
+::::
+
+##  {background-image="images/care.png" data-menu-title="Caregiving Roles"}
+
+<h2>Expand definition of </h2>
+<h2> caring roles:</h2>
+
+<br>  
+
+::: {.incremental style="font-size: 150%"}
+-   [Caring for a spouse]{style="color: #18BC9C"}
+-   [In-direct care]{style="color: #E74C3C"}
+:::
+
+:::: {.content-visible when-profile="speaker"}
+::: notes
+-   often think of caring for child or someone with a disability.\
+-   we argue should expand definition to include caring for one's spouse\
+-   and in-direct caregiving through monetary support\
+-   look at caregiving in 3 roles: spouse, parent, worker\
+:::
+::::
+
+
+##  {data-menu-title="Marriage and Parenthood Rates"}
 
 ```{r warning = FALSE, fig.width=14, fig.asp=.55}
 
@@ -156,27 +202,24 @@ p1 + plot_spacer() + p2 + plot_layout(widths = c(4, .25 ,4))
 
 :::: {.content-visible when-profile="speaker"}
 ::: notes
+
+Demographers interested in tracking what young adults ACTUALLY DO through young adulthood (which we will eventually do in this paper)  
 -   Demographic research documented declining rates in marriage/fertility.\
+
+**Second Demographic Transition**
+-   suggests a shift in values from traditional to individualistic norms precedes these behaviors.  
+-   research focuses on cultural shifts  
+-   changes in ideals/aspirations  
+
+**Structural changes**  
+- economic forces account for some behavior.  
+- expectations for self  
+
 :::
 ::::
 
 
-
-##  {#gap-id background-image="images/doors.png" data-menu-title="Culture vs Structure"}
-
-:::: {.content-visible when-profile="speaker"}
-::: notes
-**Second Demographic Transition**\
-- suggests a shift in values from traditional to individualistic norms precedes these behaviors.\
-- research focuses on cultural shifts\
-- changes in ideals/aspirations
-
-**Structural changes** - economic forces account for some behavior.\
-- expectations for self\
-:::
-::::
-
-##  {#future-id background-image="images/future.png" background-size="contain" data-menu-title="Future Selves"}
+##  {background-image="images/future.png" background-size="contain" data-menu-title="Future Selves"}
 
 :::: {.content-visible when-profile="speaker"}
 ::: notes
@@ -195,44 +238,8 @@ p1 + plot_spacer() + p2 + plot_layout(widths = c(4, .25 ,4))
 :::
 ::::
 
-## Caregiving Ambitions Framework {#care-id}
 
-[Bear 2019](https://journals.aom.org/doi/10.5465/amr.2016.0424){target="_blank"}
-
-<br>
-
-::: {style="font-size: 200%; font-family: 'Shadows Into Light'"}
-[**Motivation to give care**]{style="color: #E74C3C"}, across a variety of contexts and over the lifespan, [**is central to understanding life goals**]{style="color: #E74C3C"} and ultimately behavior.
-:::
-
-:::: {.content-visible when-profile="speaker"}
-::: notes
--   proposes that motivation to give care, across a variety of contexts and over the lifespan, central to understanding life goals and ultimately behavior.
-:::
-::::
-
-##  {#caregiving-id background-image="images/care.png" data-menu-title="Caregiving Roles"}
-
-<h2>Expand definition of </h2>
-<h2> caring roles:</h2>
-
-<br>  
-
-::: {.incremental style="font-size: 150%"}
--   [Caring for a spouse]{style="color: #18BC9C"}
--   [In-direct care]{style="color: #E74C3C"}
-:::
-
-:::: {.content-visible when-profile="speaker"}
-::: notes
--   often think of caring for child or someone with a disability.\
--   we argue should expand definition to include caring for one's spouse\
--   and in-direct caregiving through monetary support\
--   look at caregiving in 3 roles: spouse, parent, worker\
-:::
-::::
-
-##  {#time-id background-image="images/timeline.png" background-size="contain" data-menu-title="Change over time"}
+##  {background-image="images/timeline.png" background-size="contain" data-menu-title="Change over time"}
 
 :::: {.content-visible when-profile="speaker"}
 ::: notes
@@ -242,7 +249,7 @@ We argue future selves are shaped by:\
 :::
 ::::
 
-## {#gender-id  data-menu-title="Change over time"}
+## {data-menu-title="Gender shifts"}
 
 ```{r warning = FALSE, fig.width=14, fig.asp=.55}
 
@@ -337,7 +344,7 @@ p1 + plot_spacer() + p2 + plot_layout(widths = c(4, .3 ,4))
 
 
 
-## Research Questions {#RQs-id data-menu-title="Research Questions" background-image="images/questionmark-gray.png" background-size="100px" background-repeat="repeat"}
+## Research Questions {data-menu-title="Research Questions" background-image="images/questionmark-gray.png" background-size="100px" background-repeat="repeat"}
 
 ::: {.incremental .highlight-last style="font-size: 150%"}
 1.  Are there **changes** in youths' views of their future selves as spouses, parents, and workers?\
@@ -355,7 +362,7 @@ Second RQ \[read it\]\
 :::
 ::::
 
-# Monitoring the Future Surveys (1976-2023) {#slide5-id data-menu-title="Data"}
+# Monitoring the Future Surveys (1976-2023) {data-menu-title="Data"}
 
 <hr>
 
@@ -377,7 +384,7 @@ research grants from the National Institute on Drug Abuse, a part of NIH.
 :::
 ::::
 
-##  {#DVs-id data-menu-title="Dependent Variables"}
+##  {data-menu-title="Dependent Variables"}
 
 These next questions ask you to guess how well you might do in several different situations.
 **How good do you think you would be as a**:
@@ -416,7 +423,7 @@ question prompt.
 :::
 ::::
 
-## Key IVs {#IVs-id data-menu-title="Independent Variables"}
+## Key IVs {data-menu-title="Independent Variables"}
 
 ::::: columns
 ::: {.column width="30%"}
@@ -439,7 +446,7 @@ RQ2: gender & year interaction
 :::
 ::::
 
-## Sample {#Sample-id data-menu-title="Sample"}
+## Sample {data-menu-title="Sample"}
 
 ```{r results = 'asis', warning = FALSE}
 mtf_svy %>%
@@ -477,7 +484,7 @@ Also include these variables in our full models.
 :::
 ::::
 
-# Findings {#Results-id data-menu-title="Results"}
+# Findings {data-menu-title="Results"}
 
 :::: {.content-visible when-profile="speaker"}
 ::: notes
@@ -491,7 +498,7 @@ show the predicted % rather than tables of coef.
 :::
 ::::
 
-## {#Bivariate-id data-menu-title="Bivariate Trends"}
+## {data-menu-title="Bivariate Trends"}
 
 ```{r warning = FALSE, fig.width=14, fig.asp=.6}
 
@@ -570,7 +577,18 @@ df_avg %>%
 ```
 
 
-##  {#Mod2-id data-menu-title="Full Model"}
+:::: {.content-visible when-profile="speaker"}
+::: notes
+
+-    bivariate trends showing year and proportion 'very good' in each role.\
+-    good worker self higher than parent and spouse positive self entire 50 years  
+-    slight increases or steady trend from the mid-70s to 2010s.  
+-    thereafter, declines in "very good" for all three roles.  
+:::
+::::
+
+
+##  {data-menu-title="Full Model"}
 
 ```{r warning = FALSE}
 
@@ -701,20 +719,21 @@ Predicted % from ordinal logistic regression adjusting for gender, mother's educ
 :::: {.content-visible when-profile="speaker"}
 ::: notes
 [**\<click\>**]{style="color: #E74C3C;"}\
-- predicted % of 'very good' in each role without controls.\
-- 45+ years, youth felt most confident about being a good worker\
-- became more positive about all roles from mid-1970s through 2000.\
-- stable until the mid-2000s, after less likely to believe 'very good' in these roles.
+
+Model 2:control variables  
+-   coefficients for year and year^2^ are statistically significant for all three adult roles,  
+-   see the patterns hold when we add model controls, trends over time are robust.  
+-    became more positive about all roles from mid-1970s through 2000s.\
+-    smaller proportion believe 'very good' in these roles in last decade.  
 
 [**\<click\>**]{style="color: #E74C3C;"}\
 - youth returned to seeing themselves as ‘good,’ and to a lesser extent ‘fairly good,’\
 - unlikely to see themselves as ‘poor’ or ‘not so good’
 
-Model 2: gender + control variables -- coefficients for year and year^2^ steady and remain statistically significant for all three adult roles, trends over time are robust.
 :::
 ::::
 
-##  {#Mod3-id data-menu-title="Gender * Year Model"}
+##  {data-menu-title="Gender * Year Model"}
 
 ```{r warning = FALSE}
 
@@ -882,31 +901,34 @@ Predicted % from ordinal logistic regression adjusting for mother's education, r
 
 :::: {.content-visible when-profile="speaker"}
 ::: notes
--   expectations of ‘very good’ **spouse & parent** increased for both for first 30 survey years\
 
--   increases were steeper for young men than young women (p \<.001).\
+expectations of ‘very good’ **spouse** by gender  
 
--   gender gap largest in the mid 1970s & 1980s and narrowed over time.\
+-    increased for both for first 30 survey years\
+-    increases were steeper for young men than young women (p \<.001).\
+-    gender gap largest in the mid 1970s & 1980s and narrowed over time.\
 
--   In 2000s, ‘very good’ as a spouse or parent decreased for both young men and young women.\
+[**\<click\>**]{style="color: #E74C3C;"}\
 
--   mid-2000s, increasingly likely to expect to be “good” or, to a lesser extent, “fairly good” spouse or parent.
+expectations of ‘very good’ **parent** by gender  
 
--   ‘very good’ **worker** showed different patterns for young men compared with young women.\
+-    again, increased for both for first 30 survey years\
+-    decline in positivity in 2010s, especially for young women.  
+
+[**\<click\>**]{style="color: #E74C3C;"}\
+
+‘very good’ **worker** showed different patterns for young men compared with young women.\
 
 -   About 65% of young men expected “very good” worker across all the survey years.\
-
 -   young women’s “very good” worker increased from 55% in 1976 to 68% by 2004, surpassing the proportions for young men.\
-
 -   young women’s expectations dropped thereafter, diminishing to 62% by 2023.
 
-Very few expected to be “poor” or “not so good” in all three adult roles across the survey years
 :::
 ::::
 
 # Robustness Check
 
-##  {#EXP-id data-menu-title="Expectations Trends"}
+##  {data-menu-title="Expectations Trends"}
 
 ```{r warning = FALSE, fig.width=14, fig.asp=.6}
 p_mardum_sex <- mtf_svy %>%
@@ -982,7 +1004,20 @@ df_prop_sex %>%
 
 ```
 
-##  {#ModEXP-id data-menu-title="Adjusted for expectations"}
+
+:::: {.content-visible when-profile="speaker"}
+::: notes
+
+Know what you're thinking: share of youth who expect to take on these roles likely has changed.  
+Really steady proportions until the last decade.  
+dramatic drops for women as pouse and parent.  
+Some delince for young men.  
+:::
+::::
+
+
+
+##  {data-menu-title="Adjusted for expectations"}
 
 Models adjusted for marital and parenthood expectations  
 
@@ -1226,16 +1261,43 @@ df_pp_p3 %>%
 
 :::::
 
-# Summary {#slide12-id data-menu-title="Summary"}
+# Conclusion
 
-- add summary
+## Summary
 
+-   Greater positivity about worker self than spouse or parent  
+-   Inverse U-shape with more positive futures through 2000s followed by decline  
+-   Strong gender convergence
 
 :::: {.content-visible when-profile="speaker"}
 ::: notes
-[**\<click\>**]{style="color: #E74C3C;"}\
-- MTF asked about mar/par expectations.
-Limit subsample or see if correlated.\
+
+-   good worker self higher than parent and spouse positive self entire 50 years
+-   Controlling for vars, including expectations, an inverse U-shape with more positive futures in caring roles through 2000s then decline from 2010ish  
+-   a strong gendered convergence in future selves by gender 
+-   young men envision being competent parents and partners at the same rate as young women now,  
+-   young women very good at their job, from quite substantial gender traditional competencies in the 1970s
+
+
+:::
+::::
+
+## Next Steps
+
+1.   Identify diversity  
+2.   Link with outcomes 
+
+<br>  
+
+::: {style="color: #e74c3c; font-size: 150%; font-family: 'Shadows Into Light'"}
+Why did perceived competencies increase from 1970s to 2000s?  
+
+If social connection in society is diminishing, will youth be “care ambitious”?  
+
+:::
+
+:::: {.content-visible when-profile="speaker"}
+::: notes
 [**\<click\>**]{style="color: #E74C3C;"}\
 - Think about diversity in terms of class or racial identity.
 Somewhat limited in variables.\
@@ -1244,6 +1306,7 @@ Somewhat limited in variables.\
 Did fulfill these roles?
 :::
 ::::
+
 
 # Thank you!
 
@@ -1444,6 +1507,22 @@ Predicted % from ordinal logistic regression adjusting for gender, race, & regio
 
 :::: {.content-visible when-profile="speaker"}
 ::: notes
-Thanks!
+
+:::
+::::
+
+
+
+##  {#gap-id background-image="images/doors.png" data-menu-title="Culture vs Structure"}
+
+:::: {.content-visible when-profile="speaker"}
+::: notes
+**Second Demographic Transition**\
+- suggests a shift in values from traditional to individualistic norms precedes these behaviors.\
+- research focuses on cultural shifts\
+- changes in ideals/aspirations
+
+**Structural changes** - economic forces account for some behavior.\
+- expectations for self\
 :::
 ::::
