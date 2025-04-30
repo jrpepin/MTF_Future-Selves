@@ -114,7 +114,7 @@
   {
     "objectID": "Lund presentation.html#gap-id",
     "href": "Lund presentation.html#gap-id",
-    "title": "Social Change in Future Selves:",
+    "title": "Social Change in Anticipated Caring Roles:",
     "section": "",
     "text": "Second Demographic Transition\n- suggests a shift in values from traditional to individualistic norms precedes these behaviors.\n- research focuses on cultural shifts\n- changes in ideals/aspirations\nStructural changes - economic forces account for some behavior.\n- expectations for self"
   },
@@ -243,5 +243,12 @@
     "title": "Social Change in Future Selves:",
     "section": "Sub-sample of expectations",
     "text": "Sub-sample of expectations\nadd new graph here"
+  },
+  {
+    "objectID": "Lund presentation.html#MomEd-id",
+    "href": "Lund presentation.html#MomEd-id",
+    "title": "Social Change in Anticipated Caring Roles:",
+    "section": "",
+    "text": "Predicted % from ordinal logistic regression adjusting for gender, race, & region."
   }
 ]
