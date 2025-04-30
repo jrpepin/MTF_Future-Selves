@@ -1269,6 +1269,15 @@ df_pp_p3 %>%
 -   Inverse U-shape with more positive futures through 2000s followed by decline  
 -   Strong gender convergence
 
+::: {.fragment fragment-index=1} 
+
+**Next Steps**  
+
+1.   Identify diversity  
+2.   Link with outcomes 
+
+:::
+
 :::: {.content-visible when-profile="speaker"}
 ::: notes
 
@@ -1276,36 +1285,29 @@ df_pp_p3 %>%
 -   Controlling for vars, including expectations, an inverse U-shape with more positive futures in caring roles through 2000s then decline from 2010ish  
 -   a strong gendered convergence in future selves by gender 
 -   young men envision being competent parents and partners at the same rate as young women now,  
--   young women very good at their job, from quite substantial gender traditional competencies in the 1970s
+-   young women very good at their job, from quite substantial gender traditional competencies in the 1970s  
 
+[**\<click\>**]{style="color: #E74C3C;"}\
+-    Think about diversity in terms of class or racial identity.
+Somewhat limited in variables.\
+-    Restricted panel data until age 30.
+Did fulfill these roles?
 
 :::
 ::::
 
-## Next Steps
 
-1.   Identify diversity  
-2.   Link with outcomes 
+## {data-menu-title="Final Thoughts"}
+
+::: {style="font-size: 200%; font-family: 'Shadows Into Light'"}
+Why did [**perceived competencies increase**]{style="color: #E74C3C"} from 1970s to 2000s?  
+:::
 
 <br>  
 
-::: {style="color: #e74c3c; font-size: 150%; font-family: 'Shadows Into Light'"}
-Why did perceived competencies increase from 1970s to 2000s?  
-
-If social connection in society is diminishing, will youth be “care ambitious”?  
-
+::: {.fragment fragment-index=2 style="font-size: 200%; font-family: 'Shadows Into Light'"}
+If social connection in society is diminishing, will youth be “[**care ambitious**]{style="color: #E74C3C"}”?  
 :::
-
-:::: {.content-visible when-profile="speaker"}
-::: notes
-[**\<click\>**]{style="color: #E74C3C;"}\
-- Think about diversity in terms of class or racial identity.
-Somewhat limited in variables.\
-[**\<click\>**]{style="color: #E74C3C;"}\
-- Restricted panel data until age 30.
-Did fulfill these roles?
-:::
-::::
 
 
 # Thank you!
