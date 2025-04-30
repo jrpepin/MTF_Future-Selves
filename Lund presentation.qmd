@@ -44,6 +44,11 @@ library(tidyverse)
 library(gtsummary)
 library(gghighlight)
 library(scales)
+library(jsonlite)
+library(ggrepel) 
+library(patchwork)
+library(statcanR) # get CAN data
+
 
 # Define color palette
 c_palette <- c("#18BC9C",
@@ -67,8 +72,8 @@ data$kids3 <- relevel(data$kids3, ref = 3)
 
 :::: {.content-visible when-profile="speaker"}
 ::: notes
-Youth and their anticipated roles  
-Career but also caring roles of being a partner to someone, of having children as central  
+Youth and their anticipated roles\
+Career but also caring roles of being a partner to someone, of having children as central
 :::
 ::::
 
@@ -88,10 +93,11 @@ Career but also caring roles of being a partner to someone, of having children a
 
 ##  {background-image="images/care.png" data-menu-title="Caregiving Roles"}
 
-<h2>Expand definition of </h2>
-<h2> caring roles:</h2>
+<h2>Expand definition of</h2>
 
-<br>  
+<h2>caring roles:</h2>
+
+<br>
 
 ::: {.incremental style="font-size: 150%"}
 -   [Caring for a spouse]{style="color: #18BC9C"}
@@ -107,16 +113,9 @@ Career but also caring roles of being a partner to someone, of having children a
 :::
 ::::
 
-
 ##  {data-menu-title="Marriage and Parenthood Rates"}
 
 ```{r warning = FALSE, fig.width=14, fig.asp=.55}
-
-library(tidyverse)
-library(jsonlite)
-library(ggrepel) 
-library(patchwork)
-library(statcanR) # get CAN data
 
 df.mar <- read.csv("https://ourworldindata.org/grapher/marriage-rate-per-1000-inhabitants.csv?v=1&csvType=filtered&useColumnShortNames=true&time=1970..latest&country=CAN~USA~SWE~KOR~ITA")
 
@@ -202,29 +201,25 @@ p1 + plot_spacer() + p2 + plot_layout(widths = c(4, .25 ,4))
 
 :::: {.content-visible when-profile="speaker"}
 ::: notes
+Demographers interested in tracking what young adults ACTUALLY DO through young adulthood (which we will eventually do in this paper)\
+- Demographic research documented declining rates in marriage/fertility.\
 
-Demographers interested in tracking what young adults ACTUALLY DO through young adulthood (which we will eventually do in this paper)  
--   Demographic research documented declining rates in marriage/fertility.\
+**Second Demographic Transition** - suggests a shift in values from traditional to individualistic norms precedes these behaviors.\
+- research focuses on cultural shifts\
+- changes in ideals/aspirations
 
-**Second Demographic Transition**
--   suggests a shift in values from traditional to individualistic norms precedes these behaviors.  
--   research focuses on cultural shifts  
--   changes in ideals/aspirations  
-
-**Structural changes**  
-- economic forces account for some behavior.  
-- expectations for self  
-
+**Structural changes**\
+- economic forces account for some behavior.\
+- expectations for self
 :::
 ::::
-
 
 ##  {background-image="images/future.png" background-size="contain" data-menu-title="Future Selves"}
 
 :::: {.content-visible when-profile="speaker"}
 ::: notes
 -   contribution: views of future self.
-**compotence** 
+    **compotence**
 
 -   interested in adolescents’ positivity in how they foresee their adulthood.
 
@@ -238,7 +233,6 @@ Demographers interested in tracking what young adults ACTUALLY DO through young 
 :::
 ::::
 
-
 ##  {background-image="images/timeline.png" background-size="contain" data-menu-title="Change over time"}
 
 :::: {.content-visible when-profile="speaker"}
@@ -249,7 +243,7 @@ We argue future selves are shaped by:\
 :::
 ::::
 
-## {data-menu-title="Gender shifts"}
+##  {data-menu-title="Gender shifts"}
 
 ```{r warning = FALSE, fig.width=14, fig.asp=.55}
 
@@ -332,17 +326,14 @@ p1 + plot_spacer() + p2 + plot_layout(widths = c(4, .3 ,4))
 
 ```
 
-
 :::: {.content-visible when-profile="speaker"}
 ::: notes
 -   Demographic research focus on women's laborforce participation.\
 -   uneven revolution: women's lives changed more than men's.\
 -   still, men are doing more at home.
--   might expect gender differences in positivity as expectations/experience changes.  
+-   might expect gender differences in positivity as expectations/experience changes.\
 :::
 ::::
-
-
 
 ## Research Questions {data-menu-title="Research Questions" background-image="images/questionmark-gray.png" background-size="100px" background-repeat="repeat"}
 
@@ -491,14 +482,14 @@ Also include these variables in our full models.
 stepwise ordinal logistic regression models:
 
 1.  bivariate\
-2.  year * year^2^ + all control variables\
+2.  year \* year^2^ + all control variables\
 3.  interacted year and gender.
 
 show the predicted % rather than tables of coef.
 :::
 ::::
 
-## {data-menu-title="Bivariate Trends"}
+##  {data-menu-title="Bivariate Trends"}
 
 ```{r warning = FALSE, fig.width=14, fig.asp=.6}
 
@@ -576,17 +567,14 @@ df_avg %>%
 
 ```
 
-
 :::: {.content-visible when-profile="speaker"}
 ::: notes
-
--    bivariate trends showing year and proportion 'very good' in each role.\
--    good worker self higher than parent and spouse positive self entire 50 years  
--    slight increases or steady trend from the mid-70s to 2010s.  
--    thereafter, declines in "very good" for all three roles.  
+-   bivariate trends showing year and proportion 'very good' in each role.\
+-   good worker self higher than parent and spouse positive self entire 50 years\
+-   slight increases or steady trend from the mid-70s to 2010s.\
+-   thereafter, declines in "very good" for all three roles.\
 :::
 ::::
-
 
 ##  {data-menu-title="Full Model"}
 
@@ -643,8 +631,7 @@ data_max <- df_pp %>%
 
 ```
 
-::::: r-stack
-
+:::: r-stack
 ```{r warning = FALSE, fig.width=14, fig.asp=.6}
 
 lables_year <- c("'76", "'92", "'08", "'23")
@@ -680,9 +667,7 @@ df_pp %>%
 
 ```
 
-
-::: {.fragment fragment-index=1}
-
+::: {.fragment fragment-index="1"}
 ```{r warning = FALSE, fig.width=14, fig.asp=.6}
 
 lables_year <- c("'76", "'92", "'08", "'23")
@@ -710,7 +695,7 @@ df_pp %>%
         title    = "% who think they will be '__________' as a ____________")
 ```
 :::
-:::::
+::::
 
 ::: aside
 Predicted % from ordinal logistic regression adjusting for gender, mother's education, race, & region.
@@ -720,16 +705,15 @@ Predicted % from ordinal logistic regression adjusting for gender, mother's educ
 ::: notes
 [**\<click\>**]{style="color: #E74C3C;"}\
 
-Model 2:control variables  
--   coefficients for year and year^2^ are statistically significant for all three adult roles,  
--   see the patterns hold when we add model controls, trends over time are robust.  
--    became more positive about all roles from mid-1970s through 2000s.\
--    smaller proportion believe 'very good' in these roles in last decade.  
+Model 2:control variables\
+- coefficients for year and year^2^ are statistically significant for all three adult roles,\
+- see the patterns hold when we add model controls, trends over time are robust.\
+- became more positive about all roles from mid-1970s through 2000s.\
+- smaller proportion believe 'very good' in these roles in last decade.
 
 [**\<click\>**]{style="color: #E74C3C;"}\
 - youth returned to seeing themselves as ‘good,’ and to a lesser extent ‘fairly good,’\
 - unlikely to see themselves as ‘poor’ or ‘not so good’
-
 :::
 ::::
 
@@ -789,7 +773,6 @@ data_min.sex <- df_pp_sex %>%
 ```
 
 ::::: r-stack
-
 ```{r warning = FALSE, fig.width=14, fig.asp=.6}
 
 ## Draw figure
@@ -824,8 +807,7 @@ df_pp_sex %>%
 
 ```
 
-::: {.fragment fragment-index=1}
-
+::: {.fragment fragment-index="1"}
 ```{r warning = FALSE, fig.width=14, fig.asp=.6}
 df_pp_sex %>%
   filter(cat == "Parent") %>%
@@ -855,11 +837,9 @@ df_pp_sex %>%
         title    = "% who think they will be ' __________' as a parent",
         linetype = " ")
 ```
-
 :::
 
-::: {.fragment fragment-index=2}
-
+::: {.fragment fragment-index="2"}
 ```{r warning = FALSE, fig.width=14, fig.asp=.6}
 df_pp_sex %>%
   filter(cat == "Worker") %>%
@@ -889,11 +869,8 @@ df_pp_sex %>%
         title    = "% who think they will be ' __________' as a worker",
         linetype = " ")
 ```
-
 :::
-
-::::: 
-
+:::::
 
 ::: aside
 Predicted % from ordinal logistic regression adjusting for mother's education, race, & region.
@@ -901,19 +878,18 @@ Predicted % from ordinal logistic regression adjusting for mother's education, r
 
 :::: {.content-visible when-profile="speaker"}
 ::: notes
+expectations of ‘very good’ **spouse** by gender
 
-expectations of ‘very good’ **spouse** by gender  
-
--    increased for both for first 30 survey years\
--    increases were steeper for young men than young women (p \<.001).\
--    gender gap largest in the mid 1970s & 1980s and narrowed over time.\
+-   increased for both for first 30 survey years\
+-   increases were steeper for young men than young women (p \<.001).\
+-   gender gap largest in the mid 1970s & 1980s and narrowed over time.\
 
 [**\<click\>**]{style="color: #E74C3C;"}\
 
-expectations of ‘very good’ **parent** by gender  
+expectations of ‘very good’ **parent** by gender
 
--    again, increased for both for first 30 survey years\
--    decline in positivity in 2010s, especially for young women.  
+-   again, increased for both for first 30 survey years\
+-   decline in positivity in 2010s, especially for young women.
 
 [**\<click\>**]{style="color: #E74C3C;"}\
 
@@ -922,7 +898,6 @@ expectations of ‘very good’ **parent** by gender
 -   About 65% of young men expected “very good” worker across all the survey years.\
 -   young women’s “very good” worker increased from 55% in 1976 to 68% by 2004, surpassing the proportions for young men.\
 -   young women’s expectations dropped thereafter, diminishing to 62% by 2023.
-
 :::
 ::::
 
@@ -963,9 +938,26 @@ exp_min.sex <- df_prop_sex %>%
 
 labels_year <- c("'76", "'92", "'08", "'23")
 
+# tidy competency trends to overlay
+df_avg2 <- df_avg
+
+df_avg2$sex <- "All"
+
+df_avg2$response[df_avg2$cat == 'Spouse'] <- "'very good' \n spouse"
+df_avg2$response[df_avg2$cat == 'Parent'] <- "'very good' \n parent"
+
+df_avg2$cat[df_avg2$cat == 'Spouse'] <- 'get married'
+df_avg2$cat[df_avg2$cat == 'Parent'] <- 'very likely have children \n (if married)'
+
+exp_min.df_avg2 <- df_avg2 %>%
+  group_by(cat) %>%
+  slice_min(year, n = 1) %>%
+  filter(cat != "Worker")
+
 ```
 
 ```{r warning = FALSE, fig.width=14, fig.asp=.6}
+
 df_prop_sex %>%
   filter(response == 1) %>%
   ggplot(aes(x = year, y = vals, ymin = vals_low, ymax = vals_upp,
@@ -982,11 +974,16 @@ df_prop_sex %>%
                   size = 5, nudge_y = -.07, segment.color = 'transparent') +
   geom_text_repel(aes(label = scales::percent(vals, 1)), data = subset(exp_min.sex, sex == "Women"), 
                   size = 5, nudge_y = .05, segment.color = 'transparent') +
+  ## overlay competency trends
+  geom_line(data = subset(df_avg2, cat != "Worker"), aes(x = year, y = vals), linewidth = 3, alpha = .6) +
+  geom_text_repel(aes(label = response), data = exp_min.df_avg2, 
+                  size = 5, nudge_y = -.07, segment.color = 'transparent') +
+  # make it pretty
   theme_minimal(30) +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1), 
                      limits = c(0, 1)) +
   scale_x_continuous(limits = c(1975, 2030), breaks = c(1976, 1992, 2008, 2025), labels = labels_year) +
-  scale_color_manual(values = c("#3498DB", "#E74C3C")) +
+  scale_color_manual(values = c("#3498DB", "#E74C3C", "grey80")) +
   theme(
       plot.title          = element_text(face = "bold"),
       plot.title.position = "plot",
@@ -994,7 +991,7 @@ df_prop_sex %>%
       legend.position     = "none",
       panel.grid.minor    = element_blank(),
       panel.spacing       = unit(1.1, "cm", data = NULL),
-      plot.caption        = element_text(color = "grey70", size = 16)) +
+      plot.caption        = element_text(color = "grey80", size = 16)) +
   labs(
     title    = "% of U.S. high school seniors who think they will _________",
     x        = NULL,
@@ -1002,24 +999,21 @@ df_prop_sex %>%
     color    = NULL,
     caption  = "Monitoring the Future 12th Grade Surveys (1976-2023)")
 
-```
 
+```
 
 :::: {.content-visible when-profile="speaker"}
 ::: notes
-
-Know what you're thinking: share of youth who expect to take on these roles likely has changed.  
-Really steady proportions until the last decade.  
-dramatic drops for women as pouse and parent.  
-Some delince for young men.  
+Know what you're thinking: share of youth who expect to take on these roles likely has changed.\
+Really steady proportions until the last decade.\
+dramatic drops for women as pouse and parent.\
+Some delince for young men.
 :::
 ::::
 
-
-
 ##  {data-menu-title="Adjusted for expectations"}
 
-Models adjusted for marital and parenthood expectations  
+Models adjusted for marital and parenthood expectations
 
 ```{r warning = FALSE}
 
@@ -1119,7 +1113,6 @@ table <- modelsummary(mods,
 table
 ```
 
-
 ##  {#sub-id data-menu-title="Subsample by expectations"}
 
 ```{r warning = FALSE}
@@ -1180,9 +1173,7 @@ data_min.sub <- df_pp_p3 %>%
 
 ```
 
-
-::::: r-stack
-
+:::: r-stack
 ```{r warning = FALSE, fig.width=14, fig.asp=.6}
 
 df_pp_p3 %>%
@@ -1219,8 +1210,7 @@ df_pp_p3 %>%
 
 ```
 
-
-::: {.fragment fragment-index=1}
+::: {.fragment fragment-index="1"}
 ```{r warning = FALSE, fig.width=14, fig.asp=.6}
 
 df_pp_p3 %>%
@@ -1256,59 +1246,54 @@ df_pp_p3 %>%
     caption  = "Monitoring the Future 12th Grade Surveys (1976-2023)") 
 
 ```
-
 :::
-
-:::::
+::::
 
 # Conclusion
 
 ## Summary
 
--   Greater positivity about worker self than spouse or parent  
--   Inverse U-shape with more positive futures through 2000s followed by decline  
--   Strong gender convergence
+::: {.incremental .highlight-last style="font-size: 125%"}
+-   Greatest **positivity about worker** self
 
-::: {.fragment fragment-index=1} 
+-   **Inverse U-shape** with increasingly positivity through 2000s followed by decline
 
-**Next Steps**  
+-   Strong **gender convergence** over time
 
-1.   Identify diversity  
-2.   Link with outcomes 
+-   **Next Steps**
 
+    -   Identify diversity
+
+    -   Link with outcomes
 :::
 
 :::: {.content-visible when-profile="speaker"}
 ::: notes
-
 -   good worker self higher than parent and spouse positive self entire 50 years
--   Controlling for vars, including expectations, an inverse U-shape with more positive futures in caring roles through 2000s then decline from 2010ish  
--   a strong gendered convergence in future selves by gender 
--   young men envision being competent parents and partners at the same rate as young women now,  
--   young women very good at their job, from quite substantial gender traditional competencies in the 1970s  
+-   Controlling for vars, including expectations, an inverse U-shape with more positive futures in caring roles through 2000s then decline from 2010ish\
+-   a strong gendered convergence in future selves by gender
+-   young men envision being competent parents and partners at the same rate as young women now,\
+-   young women very good at their job, from quite substantial gender traditional competencies in the 1970s
 
 [**\<click\>**]{style="color: #E74C3C;"}\
--    Think about diversity in terms of class or racial identity.
+- Think about diversity in terms of class or racial identity.
 Somewhat limited in variables.\
--    Restricted panel data until age 30.
+- Restricted panel data until age 30.
 Did fulfill these roles?
-
 :::
 ::::
 
-
-## {data-menu-title="Final Thoughts"}
+##  {data-menu-title="Final Thoughts"}
 
 ::: {style="font-size: 200%; font-family: 'Shadows Into Light'"}
-Why did [**perceived competencies increase**]{style="color: #E74C3C"} from 1970s to 2000s?  
+Why did [**perceived competencies increase**]{style="color: #E74C3C"} from 1970s to 2000s?
 :::
 
-<br>  
+<br>
 
-::: {.fragment fragment-index=2 style="font-size: 200%; font-family: 'Shadows Into Light'"}
-If social connection in society is diminishing, will youth be “[**care ambitious**]{style="color: #E74C3C"}”?  
+::: {.fragment fragment-index="2" style="font-size: 200%; font-family: 'Shadows Into Light'"}
+If social connection in society is diminishing, will youth be “[**care ambitious**]{style="color: #E74C3C"}”?
 :::
-
 
 # Thank you!
 
@@ -1394,7 +1379,6 @@ data_min.ses <- df_pp_ses %>%
 ```
 
 ::::: r-stack
-
 ```{r warning = FALSE, fig.width=14, fig.asp=.6}
 
 ## Draw figure
@@ -1430,8 +1414,7 @@ df_pp_ses %>%
 
 ```
 
-::: {.fragment fragment-index=1}
-
+::: {.fragment fragment-index="1"}
 ```{r warning = FALSE, fig.width=14, fig.asp=.6}
 df_pp_ses %>%
   filter(cat == "Parent") %>%
@@ -1462,11 +1445,9 @@ df_pp_ses %>%
         subtitle = "by mother's education",
         linetype = " ")
 ```
-
 :::
 
-::: {.fragment fragment-index=2}
-
+::: {.fragment fragment-index="2"}
 ```{r warning = FALSE, fig.width=14, fig.asp=.6}
 df_pp_ses %>%
   filter(cat == "Worker") %>%
@@ -1497,11 +1478,8 @@ df_pp_ses %>%
         subtitle = "by mother's education",
         linetype = " ")
 ```
-
 :::
-
-::::: 
-
+:::::
 
 ::: aside
 Predicted % from ordinal logistic regression adjusting for gender, race, & region.
@@ -1509,11 +1487,14 @@ Predicted % from ordinal logistic regression adjusting for gender, race, & regio
 
 :::: {.content-visible when-profile="speaker"}
 ::: notes
-
 :::
 ::::
 
+##  {background-image="images/CAF_diagram.png" background-size="contain" data-menu-title="CAF Diagram"}
 
+::: aside
+[Bear 2019](https://journals.aom.org/doi/10.5465/amr.2016.0424){target="_blank"}
+:::
 
 ##  {#gap-id background-image="images/doors.png" data-menu-title="Culture vs Structure"}
 
