@@ -52,7 +52,7 @@ studyid    <- c( 7927,  7928,  7929,  7930,
                  4536, 20022, 22480, 25382, 28401,
                  30985, 34409, 34861, 35218, 36263,
                  36408, 36798, 37182, 37416, 37841,
-                 38156, 38503, 38882, 39172)
+                 38156, 38503, 38882, 39172, 39444)
 
 surveyyear <- c(1976, 1977, 1978, 1979,
                 1980, 1981, 1982, 1983, 1984,
@@ -63,7 +63,7 @@ surveyyear <- c(1976, 1977, 1978, 1979,
                 2005, 2006, 2007, 2008, 2009,
                 2010, 2011, 2012, 2013, 2014,
                 2015, 2016, 2017, 2018, 2019,
-                2020, 2021, 2022, 2023)
+                2020, 2021, 2022, 2023, 2024)
 
 Xwalk <- data.frame(surveyyear, studyid)
 
@@ -390,7 +390,7 @@ data <- data %>%
       mother == "NO"  & father == "NO"  ~ "Neither Mother/Father",
       TRUE ~  NA_character_),
     # Family Structure Dummy
-    famstru.d = case_when(
+    momdad = case_when(
       famstru == "Both Mother & Father"    ~ 1,
       famstru == "Mother Only"   | 
         famstru == "Father Only" | 
@@ -412,7 +412,7 @@ data <- data %>%
          proud, nogood, wrong, lifeuse, # Self-derogation (1984+)
          meaning, enjoy, hopeless, alive, anxiety, # Depression & Anxiety (2022+)
          getmar, mar3, mardum, markids, kids3, kidsdum, # Expectations
-         sex, race, racesex, momed, famstru, famstru.d, religion, region, tablet) 
+         sex, race, racesex, momed, famstru, momdad, religion, region, tablet) 
 
 ### Add formatted level labels for plotting 
 data <- data %>%

@@ -263,7 +263,7 @@ data %>%
   filter(
     year == 1976 |
     year == 1985 | year == 1995 | 
-    year == 2005 | year == 2015 | year == 2023) %>%
+    year == 2005 | year == 2015 | year == 2024) %>%
   distinct(year.c)
 
 
@@ -284,8 +284,11 @@ p1_very <- df_pp %>%
     legend.title=element_blank(),
     strip.text.x = element_text(face = "bold"),
     panel.grid.minor = element_blank()) +
-  scale_y_continuous(breaks = c(0., .25, .5, .75), limits=c(0, .75), labels = scales::percent) +
-  scale_x_continuous(breaks=c(-20.55, -11.55, -1.55, 8.45, 18.14, 26.45), labels = lables_year) +
+  scale_y_continuous(breaks = c(0., .25, .5, .75), 
+                     limits=c(0, .75), 
+                     labels = scales::percent) +
+  scale_x_continuous(breaks=c(-20.55, -11.55, -1.55, 8.45, 18.14, 26.45), 
+                     labels = lables_year) +
   labs( x        = " ", 
         y        = " ")
 
@@ -303,8 +306,11 @@ p1_other <- df_pp %>%
     strip.text.x = element_text(face = "bold"),
     panel.grid.minor = element_blank(),
     panel.spacing = unit(1.1, "cm", data = NULL)) +
-  scale_y_continuous(breaks = c(0., .25, .5), limits=c(0, .5), labels = scales::percent) +
-  scale_x_continuous(breaks=c(-20.55, -11.55, -1.55, 8.45, 18.14, 26.45), labels = lables_year) +
+  scale_y_continuous(breaks = c(0., .25, .5), 
+                     limits=c(0, .5), 
+                     labels = scales::percent) +
+  scale_x_continuous(breaks=c(-20.55, -11.55, -1.55, 8.45, 18.14, 26.45), 
+                     labels = lables_year) +
   labs( x        = " ", 
         y        = " ")
 
