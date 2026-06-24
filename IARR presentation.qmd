@@ -661,7 +661,7 @@ Women born in the 1990s have 89% lower odds of marriage and 85% lower odds of pa
 <br>  
 
 ::: {style="color: #E74C3C; font-size: 110%; font-family: 'Shadows Into Light'"}
-**Expectations about caring roles are important, but the decade they were born matters much more for their likelihood of becoming a spouse and parent.**  
+**Expectations about caring roles are important, but the decade women were born matters much more for their likelihood of becoming a spouse and parent.**  
 :::
 
 # Thank you!
