@@ -17,8 +17,7 @@ format:
     height: 800 # default: 700
     hash-type: number # urls use slide numbers
 embed-resources: true
-project:
-  execute-dir: MTF_Future-Selves
+output-file: index.html
 filters:
     - openlinksinnewpage
 editor: 
