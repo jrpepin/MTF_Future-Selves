@@ -1,6 +1,6 @@
 ---
 title: "Social Change in Anticipated Caring Roles:"  
-subtitle: "A Portrait of Young Americans' Views of Themselves in Adult Caring Relationships"
+subtitle: "Young Americans' Views of Their Future Selves"
 author: 
   - name: "<br> Joanna R. Pepin"
     affiliations: 
@@ -31,7 +31,7 @@ include-in-header:
       }
       </style>
 title-slide-attributes: 
-       data-background-image: images/qr-code-leaf-lund.png
+       data-background-image: images/qr-code-leaf-IARR.png
        data-background-size: "25%"
        data-background-position: "100% 100%"
 ---
@@ -607,7 +607,7 @@ df_logit |>
     plot.subtitle      = element_text(size = 18, 
                                       color = "grey60", 
                                       face = "italic")) +
-  scale_x_discrete(position = "top", limits = rev) +
+  scale_x_discrete(position = "top") +
   scale_fill_manual(values = rev(c("#18BC9C", "#3498DB", "#9966FF", "#F39C12", "#e74c3c")))  +
   scale_alpha_manual(values = c(`FALSE` = 0.2, `TRUE` = 0.9)) +
   labs( title = "Young women who expect to be “very good” in caring roles show the 
@@ -618,8 +618,8 @@ highest predicted likelihood of entering them by age 30.")
 :::: aside
 ::: {style="font-size: 70%; color: 'grey40';"}
 Predicted probability of marriage or parenthood by age 30, adjusted for birth decade, race, maternal education and employment, and family structure;  
-Data: *Monitoring the Future Surveys (U.S. 12th grade students)*;  
-Note: Highlighted bars denote statistically significant difference from 'very good', within role and gender;
+Note: Highlighted bars denote statistically significant difference from 'very good', within role and gender;  
+Data: *Monitoring the Future Surveys (U.S. 12th grade students)*
 :::
 ::::
 
@@ -633,7 +633,7 @@ Note: Highlighted bars denote statistically significant difference from 'very go
 
 ::: {.incremental .highlight-last style="font-size: 100%"}
 -    **Historical shifts in caregiving expectations (RQ1)**  
-A decline in recent decade in how strongly young people anticipate excelling in caring roles.  
+A declining proportion of young people anticipate excelling in caring roles in the recent decade.  
   
 -    **Developmental stability in early adulthood (RQ2)**  
 Young adults’ views of their caring ability stay largely stable through early adulthood.  
@@ -648,6 +648,21 @@ High early caregiving expectations shape later life direct caring transitions...
 :::
 ::::
 
+## Final Thoughts
+
+<br>  
+
+Women born in the 1960s have 31% lower odds of marriage and 22% lower odds of parenthood than those born in the 1950s.  
+  
+<br>  
+
+Women born in the 1990s have 89% lower odds of marriage and 85% lower odds of parenthood.    
+
+<br>  
+
+::: {style="color: #E74C3C; font-size: 110%; font-family: 'Shadows Into Light'"}
+**Expectations about caring roles are important, but the decade they were born matters much more for their likelihood of becoming a spouse and parent.**  
+:::
 
 # Thank you!
 
@@ -665,7 +680,7 @@ Melissa A. Milkie\
 :::
 
 ::: {.column width="50%"}
-![](images/qr-code-leaf-lund.png){fig-align="center" width="100%"}
+![](images/qr-code-leaf-IARR.png){fig-align="center" width="100%"}
 :::
 :::::
 
