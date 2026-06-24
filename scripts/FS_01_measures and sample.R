@@ -560,14 +560,17 @@ counts <- data %>%
 #                   'selfconcept_std'), round, 2))
 
 # Create survey data -----------------------------------------------------------
-mtf_svy <- data %>%
+mtf_svy <- data |>
   select(c(gdsp, gdpa, gdwk, gdsp_v, gdpa_v, gdwk_v, gdsp_num, gdpa_num, gdwk_v, 
            svyweight, year, year.c, decade,
            sex, momed, race, region,
-           getmar, mar3, mardum, markids, kids3, kidsdum)) %>%
+           getmar, mar3, mardum, markids, kids3, kidsdum)) |>
   # weight data
-  as_survey_design(id = 1,
-                   weights = svyweight)
+  as_survey_design(
+    ids = NULL,
+    weights = svyweight)
+
+save(data, file = here("data", "df.Rda"))
 
 message("End of PS_01_measures and sample") # Marks end of R Script
 

@@ -1,0 +1,583 @@
+---
+title: "IARR presentation supplement"
+format: revealjs
+editor: visual
+---
+
+```{r warning = FALSE, error = FALSE, message = FALSE, echo=FALSE, results='hide'}
+# Loading libraries
+library(here)
+library(tidyverse)
+library(gtsummary)
+library(gghighlight)
+library(scales)
+library(jsonlite)
+library(ggrepel) 
+library(patchwork)
+library(MASS)
+library(srvyr)
+library(modelsummary)
+library(ggeffects)
+library(flextable)
+library(ftExtra)
+
+# Define color palette
+c_palette <- c("#18BC9C",
+               "#3498DB",
+               "#F39C12",
+               "#9966FF",
+               "#E74C3C")
+
+# Open processed data
+load(file.path("data/df.Rda"))
+
+## Create survey data 
+mtf_svy <- data |>
+  select(c(gdsp, gdpa, gdwk, gdsp_v, gdpa_v, gdwk_v, gdsp_num, gdpa_num, gdwk_v, 
+           svyweight, year, year.c, decade,
+           sex, momed, race, region,
+           getmar, mar3, mardum, markids, kids3, kidsdum)) |>
+  # weight data
+  as_survey_design(
+    ids = NULL,
+    weights = svyweight)
+
+data$mar3  <- relevel(data$mar3,  ref = 1)
+data$kids3 <- relevel(data$kids3, ref = 3)
+
+```
+
+# Robustness Check
+
+##  {data-menu-title="Expectations Trends"}
+
+```{r warning = FALSE, fig.width=14, fig.asp=.6}
+p_mardum_sex <- mtf_svy %>%
+  filter(!is.na(mardum)) %>%
+  group_by(year, sex, mardum) %>%
+  summarize(vals  = survey_mean(vartype = "ci"))
+
+p_kidsdum_sex <- mtf_svy %>%
+  filter(!is.na(kidsdum)) %>%
+  group_by(year, sex, kidsdum) %>%
+  summarize(vals  = survey_mean(vartype = "ci"))
+
+p_mardum_sex$cat   <- "get married" 
+p_kidsdum_sex$cat  <- "very likely have children \n (if married)" 
+
+colnames(p_mardum_sex)[colnames(p_mardum_sex)=="mardum"]    <- "response"
+colnames(p_kidsdum_sex)[colnames(p_kidsdum_sex)=="kidsdum"] <- "response"
+
+df_prop_sex <- rbind(p_mardum_sex, p_kidsdum_sex)
+
+exp_max.sex <- df_prop_sex %>%
+  group_by(cat, response) %>%
+  slice_max(year, n = 1) %>%
+  filter(response == 1)
+
+exp_max.sex$label <- paste(scales::percent(exp_max.sex$vals, 1), exp_max.sex$sex)
+
+exp_min.sex <- df_prop_sex %>%
+  group_by(cat, response) %>%
+  slice_min(year, n = 1) %>%
+  filter(response == 1)
+
+labels_year <- c("'76", "'92", "'08", "'23")
+
+# tidy competency trends to overlay
+df_avg2 <- df_avg
+
+df_avg2$sex <- "All"
+
+df_avg2$response[df_avg2$cat == 'Spouse'] <- "'very good' \n spouse"
+df_avg2$response[df_avg2$cat == 'Parent'] <- "'very good' \n parent"
+
+df_avg2$cat[df_avg2$cat == 'Spouse'] <- 'get married'
+df_avg2$cat[df_avg2$cat == 'Parent'] <- 'very likely have children \n (if married)'
+
+exp_min.df_avg2 <- df_avg2 %>%
+  group_by(cat) %>%
+  slice_min(year, n = 1) %>%
+  filter(cat != "Worker")
+
+```
+
+```{r warning = FALSE, fig.width=14, fig.asp=.6}
+
+df_prop_sex %>%
+  filter(response == 1) %>%
+  ggplot(aes(x = year, y = vals, ymin = vals_low, ymax = vals_upp,
+             colour = sex, shape = sex)) +
+  geom_line(linewidth = 2, alpha = .7) +
+  geom_errorbar(alpha = .2) +
+  geom_point(size = 3) +
+  facet_wrap(~cat) +
+  geom_text_repel(aes(label = label), data = subset(exp_max.sex, sex == "Men"), 
+                  size = 7, nudge_x = 5, nudge_y = .05, segment.color = 'transparent') +
+  geom_text_repel(aes(label = label), data = subset(exp_max.sex, sex == "Women"), 
+                  size = 7, nudge_x = 5, nudge_y = -.05, segment.color = 'transparent') +
+  geom_text_repel(aes(label = scales::percent(vals, 1)), data = subset(exp_min.sex, sex == "Men"), 
+                  size = 5, nudge_y = -.07, segment.color = 'transparent') +
+  geom_text_repel(aes(label = scales::percent(vals, 1)), data = subset(exp_min.sex, sex == "Women"), 
+                  size = 5, nudge_y = .05, segment.color = 'transparent') +
+  ## overlay competency trends
+  geom_line(data = subset(df_avg2, cat != "Worker"), aes(x = year, y = vals), linewidth = 3, alpha = .6) +
+  geom_text_repel(aes(label = response), data = exp_min.df_avg2, 
+                  size = 5, nudge_y = -.07, segment.color = 'transparent') +
+  # make it pretty
+  theme_minimal(30) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1), 
+                     limits = c(0, 1)) +
+  scale_x_continuous(limits = c(1975, 2030), breaks = c(1976, 1992, 2008, 2025), labels = labels_year) +
+  scale_color_manual(values = c("#3498DB", "#E74C3C", "grey80")) +
+  theme(
+      plot.title          = element_text(face = "bold"),
+      plot.title.position = "plot",
+      strip.text.x        = element_text(face = "bold"),
+      legend.position     = "none",
+      panel.grid.minor    = element_blank(),
+      panel.spacing       = unit(1.1, "cm", data = NULL),
+      plot.caption        = element_text(color = "grey80", size = 16)) +
+  labs(
+    title    = "% of U.S. high school seniors who think they will _________",
+    x        = NULL,
+    y        = NULL,
+    color    = NULL,
+    caption  = "Monitoring the Future 12th Grade Surveys (1976-2023)")
+
+
+```
+
+:::: {.content-visible when-profile="speaker"}
+::: notes
+Know what you're thinking: share of youth who expect to take on these roles likely has changed.\
+Really steady proportions until the last decade.\
+dramatic drops for women as spouse and parent.\
+Some decline for young men.
+:::
+::::
+
+##  {data-menu-title="Adjusted for expectations"}
+
+Models adjusted for marital and parenthood expectations
+
+```{r warning = FALSE}
+
+## Models with expectations as controls
+polr2.sp.exp  <- polr(gdsp ~ year.c * sex + I(year.c^2) * sex + mar3 +
+                       momed + race + region,
+                     data = data, weights = svyweight, Hess = T)
+
+polr2.pa.exp  <- polr(gdpa ~ year.c * sex + I(year.c^2) * sex  + kids3 +
+                       momed + race + region,
+                     data = data, weights = svyweight, Hess = T)
+
+## Turn into tidy dataframes
+
+tidySP     <- broom::tidy(polr2.sp)
+tidyPA     <- broom::tidy(polr2.pa)
+tidySP.exp <- broom::tidy(polr2.sp.exp)
+tidyPA.exp <- broom::tidy(polr2.pa.exp)
+
+## Transform output
+tidySP <- tidySP %>%
+  mutate(z_scores = estimate/std.error,
+         p.value  = round(2 * (1 - pnorm(abs(z_scores))), 3),
+         estimate = case_when(
+           coef.type == "coefficient" ~ exp(estimate),
+           coef.type == "scale"       ~ estimate))
+
+tidyPA <- tidyPA %>%
+  mutate(z_scores = estimate/std.error,
+         p.value  = round(2 * (1 - pnorm(abs(z_scores))), 3),
+         estimate = case_when(
+           coef.type == "coefficient" ~ exp(estimate),
+           coef.type == "scale"       ~ estimate))
+
+tidySP.exp <- tidySP.exp %>%
+  mutate(z_scores = estimate/std.error,
+         p.value  = round(2 * (1 - pnorm(abs(z_scores))), 3),
+         estimate = case_when(
+           coef.type == "coefficient" ~ exp(estimate),
+           coef.type == "scale"       ~ estimate))
+
+tidyPA.exp <- tidyPA.exp %>%
+  mutate(z_scores = estimate/std.error,
+         p.value  = round(2 * (1 - pnorm(abs(z_scores))), 3),
+         estimate = case_when(
+           coef.type == "coefficient" ~ exp(estimate),
+           coef.type == "scale"       ~ estimate))
+
+## Turn into modelsummary objects
+modSP            <- list(tidy = tidySP)
+class(modSP)     <- "modelsummary_list"
+
+modPA            <- list(tidy = tidyPA)
+class(modPA)     <- "modelsummary_list"
+
+modSP.exp        <- list(tidy = tidySP.exp)
+class(modSP.exp) <- "modelsummary_list"
+
+modPA.exp        <- list(tidy = tidyPA.exp)
+class(modPA.exp) <- "modelsummary_list"
+
+mods <- list(
+  "full model" = modSP,
+  "with expectations" = modSP.exp,
+  "full model" = modPA,
+  "with expectations" = modPA.exp)
+
+ cm <- c('year.c'                             = 'Year',
+         'I(year.c^2)'                        = 'Year2',
+         'sexWomen'                           = "Women",
+         'year.c:sexWomen'                    = 'Year * Women',
+         'sexWomen:I(year.c^2)'               = 'Year2 * Women',
+         'mar3Not getting married'            = 'Not getting married',
+         'mar3I have no idea'                 = 'I have no idea',
+         'kids3Fairly likely'                 = 'Fairly likely',
+         'kids3Unlikely/Uncertain'            = 'Unlikely/Uncertain')
+
+table <- modelsummary(mods,
+                      shape = term ~ model + statistic,
+                      estimate = "{estimate}{stars}",
+                      gof_omit = ".*",
+                      coef_map = cm,
+                      fmt = fmt_decimal(digits = 3, pdigits = 3),
+                      output = "huxtable") %>%
+  huxtable::as_flextable() %>%
+  add_body_row(values = c(" ", "coef.", "S.E.","coef.", "S.E.","coef.", "S.E.","coef.", "S.E."), colwidths = c(1,1,1,1,1,1,1,1,1)) %>%
+  add_body_row(values = c(" ", "full model", "with expectations","full model", "with expectations"), colwidths = c(1,2,2,2,2)) %>%
+  delete_rows(i = 3, part = "body") %>%
+  add_header_row(colwidths = c(1, 4, 4), values = c(" ", "Spouse", "Parents")) %>%
+   theme_vanilla() %>%
+    align(i = 1, part = "header", align = "center") %>%
+    align(i = 1, part = "body", align = "center") %>%
+  fontsize(size = 22, part = "all")
+
+table
+```
+
+##  {#sub-id data-menu-title="Subsample by expectations"}
+
+```{r warning = FALSE}
+
+## Models with subsamples
+polr2.sp.mar  <- polr(gdsp ~ year.c * sex + I(year.c^2) * sex + 
+                        momed + race + region,
+                      data=subset(data, mar3=="Getting married"), weights = svyweight, Hess = T)
+
+polr2.pa.kids <- polr(gdpa ~ year.c * sex + I(year.c^2) * sex  +
+                        momed + race + region,
+                      data=subset(data, kids3=="Very likely"), weights = svyweight, Hess = T)
+
+## Average Predictions 
+pp_sp_sex_sub   <- predict_response(polr2.sp.mar, terms = c("year.c [all]", "sex"))
+pp_pa_sex_sub   <- predict_response(polr2.pa.kids, terms = c("year.c [all]", "sex"))
+
+## Combine dfs
+pp_sp_sex_sub$cat    <- "Spouse" 
+pp_pa_sex_sub$cat    <- "Parent" 
+
+pp_sp_sex_sub$sample  <- "think will 'get married'" 
+pp_pa_sex_sub$sample  <- "if marry, very likely have kids" 
+
+df_pp_sex_sub <- rbind(pp_sp_sex_sub, pp_pa_sex_sub)
+
+## Tidy variables
+df_pp_sex_sub$response.level <- factor(df_pp_sex_sub$response.level, 
+                                   levels=c("Very good", 
+                                            "Good", 
+                                            "Fairly good", 
+                                            "Not so good", 
+                                            "Poor"))
+
+## Combine dfs
+df_pp_sex$sample      <- "full sample" 
+
+df_pp_p3 <- rbind(df_pp_sex, df_pp_sex_sub)
+
+
+df_pp_p3$sample <- factor(df_pp_p3$sample, 
+                       levels=c(
+                         "full sample",
+                         "think will 'get married'",
+                         "if marry, very likely have kids"))
+
+lables_year <- c("'76", "'92", "'08", "'23")
+
+data_max.sub <- df_pp_p3 %>%
+  group_by(response.level) %>%
+  slice_max(x, n = 1) %>%
+  filter(group == "Men")
+
+data_min.sub <- df_pp_p3 %>%
+  group_by(response.level) %>%
+  slice_min(x, n = 1) %>%
+  filter(response.level == "Very good")
+
+```
+
+:::: r-stack
+```{r warning = FALSE, fig.width=14, fig.asp=.6}
+
+df_pp_p3 %>%
+    filter(cat == "Spouse") %>%
+  ggplot(aes(x = x, y = predicted, color = response.level,
+             ymin = conf.low, ymax = conf.high)) +
+  #  geom_errorbar(width = 0.2, color="grey80") +
+  geom_line(aes(linetype = group), linewidth = 2) +
+  geom_text_repel(aes(label = response.level), data = data_max.sub %>% filter(cat == "Spouse"), 
+                  size = 8, nudge_x = 5, segment.color = 'transparent') +
+  geom_text_repel(aes(label = group), data = data_min.sub %>% filter(cat == "Spouse"), 
+                  size = 8, nudge_x = 3, nudge_y = .07, segment.color = 'transparent', color = "grey30") +
+  facet_wrap(~sample, ncol = 4) +
+  theme_minimal(30) +
+  theme(
+      plot.title          = element_text(face = "bold"),
+      plot.title.position = "plot",
+      strip.text.x        = element_text(face = "bold"),
+      legend.position     = "none",
+      panel.grid.minor    = element_blank(),
+      panel.spacing       = unit(1.1, "cm", data = NULL),
+      plot.caption        = element_text(color = "grey70", size = 16)) +
+  scale_y_continuous(breaks = c(0., .25, .5, .75), limits=c(0, .75), labels = scales::percent) +
+  scale_x_continuous(breaks=c(-20.55, -4.55, 11.45, 26.45), limits=c(-21, 35), labels = lables_year) +
+  scale_color_manual(values = c("#18BC9C", "#3498DB", "#9966FF","#F39C12", "#e74c3c")) +
+  labs( 
+    title    = "% who think they will be ' __________' as a spouse",
+#    subtitle = "for the full sample and only youth expecting to get married",
+    x        = " ", 
+    y        = " ",
+    color    = "Response level",
+    linetype = " ",
+    caption  = "Monitoring the Future 12th Grade Surveys (1976-2023)") 
+
+```
+
+::: {.fragment fragment-index="1"}
+```{r warning = FALSE, fig.width=14, fig.asp=.6}
+
+df_pp_p3 %>%
+    filter(cat == "Parent") %>%
+  ggplot(aes(x = x, y = predicted, color = response.level,
+             ymin = conf.low, ymax = conf.high)) +
+  #  geom_errorbar(width = 0.2, color="grey80") +
+  geom_line(aes(linetype = group), linewidth = 2) +
+  geom_text_repel(aes(label = response.level), data = data_max.sub %>% filter(cat == "Parent"), 
+                  size = 8, nudge_x = 5, segment.color = 'transparent') +
+  geom_text_repel(aes(label = group), data = data_min.sub %>% filter(cat == "Parent"), 
+                  size = 8, nudge_x = 0, nudge_y = .07, segment.color = 'transparent', color = "grey30") +
+  facet_wrap(~sample, ncol = 4) +
+  theme_minimal(30) +
+  theme(
+      plot.title          = element_text(face = "bold"),
+      plot.title.position = "plot",
+      strip.text.x        = element_text(face = "bold"),
+      legend.position     = "none",
+      panel.grid.minor    = element_blank(),
+      panel.spacing       = unit(1.1, "cm", data = NULL),
+      plot.caption        = element_text(color = "grey70", size = 16)) +
+  scale_y_continuous(breaks = c(0., .25, .5, .75), limits=c(0, .75), labels = scales::percent) +
+  scale_x_continuous(breaks=c(-20.55, -4.55, 11.45, 26.45), limits=c(-21, 35), labels = lables_year) +
+  scale_color_manual(values = c("#18BC9C", "#3498DB", "#9966FF","#F39C12", "#e74c3c")) +
+  labs( 
+    title    = "% who think they will be ' __________' as a parent",
+#    subtitle = "for the full sample and only youth very likely to have children",
+    x        = " ", 
+    y        = " ",
+    color    = "Response level",
+    linetype = " ",
+    caption  = "Monitoring the Future 12th Grade Surveys (1976-2023)") 
+
+```
+:::
+::::
+
+# Appendix
+
+##  {#MomEd-id data-menu-title="MomEd * Year Model"}
+
+```{r warning = FALSE}
+
+polr2.sp.ses  <- polr(gdsp ~ year.c * momed + I(year.c^2) * momed +
+                       sex + race + region,
+                     data = data, weights = svyweight, Hess = T)
+
+polr2.pa.ses  <- polr(gdpa ~ year.c * momed + I(year.c^2) * momed  + 
+                       sex + race + region,
+                     data = data, weights = svyweight, Hess = T)
+
+polr2.wk.ses  <- polr(gdwk ~ year.c * momed + I(year.c^2) * momed  + 
+                       sex + race + region,
+                     data = data, weights = svyweight, Hess = T)
+
+## Average Predictions 
+pp_sp_ses   <- predict_response(polr2.sp.ses, terms = c("year.c [all]", "momed"))
+pp_pa_ses   <- predict_response(polr2.pa.ses, terms = c("year.c [all]", "momed"))
+pp_wk_ses   <- predict_response(polr2.wk.ses, terms = c("year.c [all]", "momed"))
+
+## Combine dfs
+pp_sp_ses$cat    <- "Spouse" 
+pp_pa_ses$cat    <- "Parent" 
+pp_wk_ses$cat    <- "Worker" 
+
+df_pp_ses <- rbind(pp_wk_ses, pp_sp_ses, pp_pa_ses)
+
+## Tidy variables
+df_pp_ses$response.level <- factor(df_pp_ses$response.level, 
+                                   levels=c("Very good", 
+                                            "Good", 
+                                            "Fairly good", 
+                                            "Not so good", 
+                                            "Poor"))
+
+df_pp_ses$cat <- factor(df_pp_ses$cat, 
+                        levels=c("Spouse", 
+                                 "Parent",
+                                 "Worker"))
+
+lables_year <- c("'76", "'92", "'08", "'23")
+
+data_max.ses <- df_pp_ses %>%
+  group_by(response.level) %>%
+  slice_max(x, n = 1) %>%
+  filter(group == "Completed college")
+
+data_min.ses <- df_pp_ses %>%
+  group_by(response.level) %>%
+  slice_min(x, n = 1) %>%
+  filter(response.level == "Very good")
+
+```
+
+::::: r-stack
+```{r warning = FALSE, fig.width=14, fig.asp=.6}
+
+## Draw figure
+
+df_pp_ses %>%
+  filter(cat == "Spouse") %>%
+  ggplot(aes(x = x, y = predicted, color = response.level,
+             ymin = conf.low, ymax = conf.high)) +
+  #  geom_errorbar(width = 0.2, color="grey80") +
+  geom_line(aes(linetype = group), linewidth = 2) +
+  geom_text_repel(aes(label = response.level), data = data_max.ses %>% filter(cat == "Spouse"), 
+                  size = 8, nudge_x = 5, segment.color = 'transparent') +
+  geom_text_repel(aes(label = group), data = data_min.ses %>% filter(cat == "Spouse"), 
+                  size = 8, nudge_x = 3, nudge_y = .05, segment.color = 'transparent', color = "grey30") +
+  theme_minimal(30) +
+  theme(
+      plot.title          = element_text(face = "bold"),
+      plot.title.position = "plot",
+      strip.text.x        = element_text(face = "bold"),
+      legend.position     = "none",
+      panel.grid.minor    = element_blank(),
+      panel.spacing       = unit(1.1, "cm", data = NULL),
+      plot.caption        = element_text(color = "grey70", size = 16)) +
+  scale_y_continuous(breaks = c(0., .25, .5, .75), limits=c(0, .75), labels = scales::percent) +
+  scale_x_continuous(breaks=c(-20.55, -4.55, 11.45, 26.45), labels = lables_year) +
+  scale_color_manual(values = c("#18BC9C", "#3498DB", "#9966FF","#F39C12", "#e74c3c")) +
+  labs( x        = " ", 
+        y        = " ",
+        color    = "Response level",
+        title    = "% who think they will be ' __________' as a spouse",
+        subtitle = "by mother's education",
+        linetype = " ")
+
+```
+
+::: {.fragment fragment-index="1"}
+```{r warning = FALSE, fig.width=14, fig.asp=.6}
+df_pp_ses %>%
+  filter(cat == "Parent") %>%
+  ggplot(aes(x = x, y = predicted, color = response.level,
+             ymin = conf.low, ymax = conf.high)) +
+  #  geom_errorbar(width = 0.2, color="grey80") +
+  geom_line(aes(linetype = group), linewidth = 2) +
+  geom_text_repel(aes(label = response.level), data = data_max.ses %>% filter(cat == "Parent"), 
+                  size = 8, nudge_x = 5, segment.color = 'transparent') +
+  geom_text_repel(aes(label = group), data = data_min.ses %>% filter(cat == "Parent"), 
+                  size = 8, nudge_x = 3, nudge_y = .05, segment.color = 'transparent', color = "grey30") +
+  theme_minimal(30) +
+  theme(
+      plot.title          = element_text(face = "bold"),
+      plot.title.position = "plot",
+      strip.text.x        = element_text(face = "bold"),
+      legend.position     = "none",
+      panel.grid.minor    = element_blank(),
+      panel.spacing       = unit(1.1, "cm", data = NULL),
+      plot.caption        = element_text(color = "grey70", size = 16)) +
+  scale_y_continuous(breaks = c(0., .25, .5, .75), limits=c(0, .75), labels = scales::percent) +
+  scale_x_continuous(breaks=c(-20.55, -4.55, 11.45, 26.45), labels = lables_year) +
+  scale_color_manual(values = c("#18BC9C", "#3498DB", "#9966FF","#F39C12", "#e74c3c")) +
+  labs( x        = " ", 
+        y        = " ",
+        color    = "Response level",
+        title    = "% who think they will be ' __________' as a parent",
+        subtitle = "by mother's education",
+        linetype = " ")
+```
+:::
+
+::: {.fragment fragment-index="2"}
+```{r warning = FALSE, fig.width=14, fig.asp=.6}
+df_pp_ses %>%
+  filter(cat == "Worker") %>%
+  ggplot(aes(x = x, y = predicted, color = response.level,
+             ymin = conf.low, ymax = conf.high)) +
+  #  geom_errorbar(width = 0.2, color="grey80") +
+  geom_line(aes(linetype = group), linewidth = 2) +
+  geom_text_repel(aes(label = response.level), data = data_max.ses %>% filter(cat == "Worker"), 
+                  size = 8, nudge_x = 5, segment.color = 'transparent') +
+  geom_text_repel(aes(label = group), data = data_min.ses %>% filter(cat == "Worker"), 
+                  size = 8, nudge_x = 3, nudge_y = .03, segment.color = 'transparent', color = "grey30") +
+  theme_minimal(30) +
+  theme(
+      plot.title          = element_text(face = "bold"),
+      plot.title.position = "plot",
+      strip.text.x        = element_text(face = "bold"),
+      legend.position     = "none",
+      panel.grid.minor    = element_blank(),
+      panel.spacing       = unit(1.1, "cm", data = NULL),
+      plot.caption        = element_text(color = "grey70", size = 16)) +
+  scale_y_continuous(breaks = c(0., .25, .5, .75), limits=c(0, .75), labels = scales::percent) +
+  scale_x_continuous(breaks=c(-20.55, -4.55, 11.45, 26.45), labels = lables_year) +
+  scale_color_manual(values = c("#18BC9C", "#3498DB", "#9966FF","#F39C12", "#e74c3c")) +
+  labs( x        = " ", 
+        y        = " ",
+        color    = "Response level",
+        title    = "% who think they will be ' __________' as a worker",
+        subtitle = "by mother's education",
+        linetype = " ")
+```
+:::
+:::::
+
+::: aside
+Predicted % from ordinal logistic regression adjusting for gender, race, & region.
+:::
+
+:::: {.content-visible when-profile="speaker"}
+::: notes
+:::
+::::
+
+##  {background-image="images/CAF_diagram.png" background-size="contain" data-menu-title="CAF Diagram"}
+
+::: aside
+[Bear 2019](https://journals.aom.org/doi/10.5465/amr.2016.0424){target="_blank"}
+:::
+
+##  {#gap-id background-image="images/doors.png" data-menu-title="Culture vs Structure"}
+
+:::: {.content-visible when-profile="speaker"}
+::: notes
+**Second Demographic Transition**\
+- suggests a shift in values from traditional to individualistic norms precedes these behaviors.\
+- research focuses on cultural shifts\
+- changes in ideals/aspirations
+
+**Structural changes** - economic forces account for some behavior.\
+- expectations for self\
+:::
+::::

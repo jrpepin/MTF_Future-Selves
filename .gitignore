@@ -1,14 +1,17 @@
 .Rproj.user
 .Rhistory
 .RData
+.Rda
 .Ruserdata
 *.docx
 *.txt
 *.pdf
 /.quarto/
 /_site/
-output/ 
+output/
 ~$*
-**.stswp  
+**.stswp
 
 .positai
+
+**/*.quarto_ipynb
