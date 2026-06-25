@@ -569,7 +569,7 @@ Data: *Monitoring the Future Surveys (U.S. 12th grade students)*
 
 ## {data-menu-title="Transitions to marriage and parenthood"}
 
-```{r warning = FALSE, fig.width=14, fig.asp=.58}
+```{r warning = FALSE, fig.width=14, fig.asp=.56}
 
 df_logit$x <- factor(df_logit$x, levels = c("Poor", "Not so good", "Fairly good", "Good", "Very good"))
 
@@ -617,7 +617,7 @@ highest predicted likelihood of entering them by age 30.")
 
 :::: aside
 ::: {style="font-size: 70%; color: 'grey40';"}
-Predicted probability of marriage & parenthood by age 30, adjusted for birth decade, race, maternal education and employment, and family structure;  
+Predicted probability of marriage/parenthood by age 30, adjusted for birth decade, race, maternal education and employment, and family structure;  
 Note: Highlighted bars denote statistically significant difference from 'very good', within role and gender;  
 Data: *Monitoring the Future Surveys (U.S. 12th grade students)*
 :::
