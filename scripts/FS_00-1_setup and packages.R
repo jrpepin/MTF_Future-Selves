@@ -17,6 +17,7 @@ pacman::p_load(
   tidyverse,       # dplyr tidyr forcats stringr tibble ggplot2
   icpsrdata,       # import ICPSR data
   foreign,         # import Stata data
+  readxl,          # import excel data
   data.table,      # need for rbindlist 
   haven,           #
   plyr,            #
@@ -74,6 +75,17 @@ fct_case_when <- function(...) {
   levels <- levels[!is.na(levels)]
   factor(dplyr::case_when(...), levels=levels)
 } 
+
+## Regression table key
+stars <- function(p) {
+  case_when(
+    p < .001 ~ "***",
+    p < .01  ~ "**",
+    p < .05  ~ "*",
+    TRUE     ~ ""
+  )
+}
+
 
 ################################################################################
 # Set-up the Directories
