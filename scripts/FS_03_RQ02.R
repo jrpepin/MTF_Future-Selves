@@ -10,7 +10,7 @@ tbl02 <- read_excel(
   here("data", "FS_RQ02.xlsx"), 
   sheet = "mods03",
   skip = 1) |>
-  select(-c(part)) 
+  select(-c(part, gdwk)) 
 
 # Split into coefficients, SEs, and p-values
 coef_df <- tbl02 |>
@@ -24,7 +24,6 @@ se_df <- tbl02 |>
 p_df <- tbl02 |>
   filter(statistic == "{p.value}")
 
-
 # create the coefficient rows
 coef_df <- coef_df |>
   mutate(
@@ -33,10 +32,7 @@ coef_df <- coef_df |>
       stars(p_df$gdsp)),
     gdpa = paste0(
       sprintf("%.2f", gdpa),
-      stars(p_df$gdpa)),
-    gdwk = paste0(
-      sprintf("%.2f", gdwk),
-      stars(p_df$gdwk))
+      stars(p_df$gdpa))
   )
 
 # create the se rows
@@ -44,8 +40,7 @@ se_df <- se_df |>
   mutate(
     term = "",
     gdsp = paste0("(", sprintf("%.2f", gdsp), ")"),
-    gdpa = paste0("(", sprintf("%.2f", gdpa), ")"),
-    gdwk = paste0("(", sprintf("%.2f", gdwk), ")")
+    gdpa = paste0("(", sprintf("%.2f", gdpa), ")")
   )
 
 # create significance stars function
@@ -67,25 +62,95 @@ tbl_display <- purrr::map_dfr(
   seq_len(nrow(coef_df)),
   ~ bind_rows(
     coef_df[.x, ],
-    se_df[.x, ]
+    se_df[.x, ])) |>
+  select(term, gdsp, gdpa) |>
+  # remove empty SE rows for random effects
+  filter(
+  !(term == ""  &
+    is.na(gdsp) &
+    is.na(gdpa))
   )
-) |>
-  select(term, gdsp, gdpa, gdwk)
 
-#create the table:
-tbl_display |>
+# Pretty variable labels
+term_labels <- c(
+  "(Intercept)"                 = "Intercept",
+  "age_c"                       = "Age (centered)",
+  "sexWomen"                    = "Woman",
+  "decades1960s"                = "\u00A0\u00A0\u00A01960s",
+  "decades1970s"                = "\u00A0\u00A0\u00A01970s",
+  "decades1980s"                = "\u00A0\u00A0\u00A01980s",
+  "decades1990s"                = "\u00A0\u00A0\u00A01990s",
+  "decades2000s"                = "2000s",
+  "mom_ba"                      = "Rs mom had BA degree or more",
+  "momwork"                     = "Rs mom mostly/always employed",
+  "momdad"                      = "R lived w/ both mom & dad at BY",
+  "raceethBlack"                = "\u00A0\u00A0\u00A0Black",
+  "raceethAnother race"         = "\u00A0\u00A0\u00A0Another Race",
+  "SD (Intercept MTFID)"        = "\u00A0\u00A0\u00A0SD Intercept",
+  "SD (age_c MTFID)"            = "\u00A0\u00A0\u00A0SD Age Slope",
+  "Cor (Intercept~age_c MTFID)" = "\u00A0\u00A0\u00A0Correlation (Intercept, Age)",
+  "SD (Observations)"           = "\u00A0\u00A0\u00A0Residual SD"
+)
+
+# create category headers 
+decade_row <- tibble(
+  term = "Birth Decade (ref. 1950s)",
+  gdsp = "",
+  gdpa = "")
+
+race_row <- tibble(
+  term = "Race/ethnicity (ref. White)",
+  gdsp = "",
+  gdpa = "")
+
+re_row <- tibble(
+  term = "Random Effects",
+  gdsp = "",
+  gdpa = "")
+
+# find var heading insertion positions
+re_pos <- which(
+  grepl("^SD|^Cor", tbl_display$term)
+)[1]
+
+decade_pos <- which(tbl_display$term == "decades1960s")[1]
+race_pos <- which(tbl_display$term == "raceethBlack")[1]
+
+# insert heading rows
+tbl_display <- bind_rows(
+  tbl_display[1:(decade_pos - 1), ],
+  decade_row,
+  tbl_display[decade_pos:(race_pos - 1), ],
+  race_row,
+  tbl_display[race_pos:(re_pos - 1), ],
+  re_row,
+  tbl_display[re_pos:nrow(tbl_display), ]
+)
+
+
+# create the table:
+tbl02 <- tbl_display |>
+  mutate(term = recode(term, !!!term_labels)) |>
   gt() |>
+  tab_header(
+    title = md("**Table 02. Multilevel Models of Age-Related Changes in Spouse and Parent Role Expectations**")) |>
   cols_label(
     term = "",
     gdsp = md("**Spouse**"),
-    gdpa = md("**Parent**"),
-    gdwk = md("**Worker**")
-  ) |>
+    gdpa = md("**Parent**")) |>
   tab_source_note(
-    md("*p* < .05; **p** < .01; ***p*** < .001")
-  ) |>
+    md("\\* p < .05; \\** p < .01; \\*** p < .001")) |>
   tab_options(
     table.font.size = px(12),
     data_row.padding = px(2)
   )
-    
+
+tbl02    
+
+# Export the table to word
+gtsave(
+  tbl02,
+  here("output", "Table2.docx")
+)
+
+
