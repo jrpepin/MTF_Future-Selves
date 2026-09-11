@@ -1,46 +1,53 @@
 #-------------------------------------------------------------------------------
 # FS Project
-# FS_03_RQ02_VDE.R
+# FS_04_RQ03_VDE.R
 # Joanna R. Pepin
 #-------------------------------------------------------------------------------
 
-# Do expectations change over the life course (18-30)?
+# Do early expectations or trajectories predict transitions? 
+# Do they have independent effects?
 
-tbl02 <- read_excel(
-  here("data", "FS_RQ02.xlsx"), 
-  sheet = "mods03",
+tbl03_mar <- read_excel(
+  here("data", "FS_RQ03.xlsx"), 
+  sheet = "mods05_mar",
   skip = 1) |>
-  select(-c(part, gdwk)) 
+  select(-c(part)) 
 
 # Split into coefficients, SEs, and p-values
-coef_df <- tbl02 |>
+coef_df <- tbl03_mar |>
   filter(statistic == "estimate") |>
   mutate(across(-c(term, statistic), as.numeric))
 
-se_df <- tbl02 |>
+## model names
+model_vars <- names(coef_df) |>
+  grep("^(ever_mar_|mar_at_)", x = _, value = TRUE)
+
+## SE
+se_df <- tbl03_mar |>
   filter(statistic == "{std.error}") |>
   mutate(across(-c(term, statistic), as.numeric))
 
-p_df <- tbl02 |>
+## p values
+p_df <- tbl03_mar |>
   filter(statistic == "{p.value}")
 
-# create the coefficient rows
+# coefficient rows
 coef_df <- coef_df |>
   mutate(
-    gdsp = paste0(
-      sprintf("%.2f", gdsp),
-      stars(p_df$gdsp)),
-    gdpa = paste0(
-      sprintf("%.2f", gdpa),
-      stars(p_df$gdpa))
+    across(
+      all_of(model_vars),
+      ~ paste0(sprintf("%.2f", .x), stars(p_df[[cur_column()]]))
+    )
   )
 
-# create the se rows
+# standard error rows
 se_df <- se_df |>
   mutate(
     term = "",
-    gdsp = paste0("(", sprintf("%.2f", gdsp), ")"),
-    gdpa = paste0("(", sprintf("%.2f", gdpa), ")")
+    across(
+      all_of(model_vars),
+      ~ paste0("(", sprintf("%.2f", .x), ")")
+    )
   )
 
 # create significance stars function
@@ -74,9 +81,12 @@ tbl_display <- purrr::map_dfr(
     )
   )
 
+
 # Pretty variable labels
 term_labels <- c(
   "(Intercept)"                 = "Intercept",
+  "int_mar"                     = "Initial spouse expectation (random intercept)",
+  "slope_mar_z"                 = "Change in spouse expectation (random intercept)",
   "age_c"                       = "Age (centered)",
   "sexWomen"                    = "Woman",
   "decades1960s"                = "\u00A0\u00A0\u00A01960s",
@@ -94,66 +104,3 @@ term_labels <- c(
   "Cor (Intercept~age_c MTFID)" = "\u00A0\u00A0\u00A0Correlation (Intercept, Age)",
   "SD (Observations)"           = "\u00A0\u00A0\u00A0Residual SD"
 )
-
-# create category headers 
-decade_row <- tibble(
-  term = "Birth Decade (ref. 1950s)",
-  gdsp = "",
-  gdpa = "")
-
-race_row <- tibble(
-  term = "Race/ethnicity (ref. White)",
-  gdsp = "",
-  gdpa = "")
-
-re_row <- tibble(
-  term = "Random Effects",
-  gdsp = "",
-  gdpa = "")
-
-# find var heading insertion positions
-re_pos <- which(
-  grepl("^SD|^Cor", tbl_display$term)
-)[1]
-
-decade_pos <- which(tbl_display$term == "decades1960s")[1]
-race_pos <- which(tbl_display$term == "raceethBlack")[1]
-
-# insert heading rows
-tbl_display <- bind_rows(
-  tbl_display[1:(decade_pos - 1), ],
-  decade_row,
-  tbl_display[decade_pos:(race_pos - 1), ],
-  race_row,
-  tbl_display[race_pos:(re_pos - 1), ],
-  re_row,
-  tbl_display[re_pos:nrow(tbl_display), ]
-)
-
-
-# create the table:
-tbl02 <- tbl_display |>
-  mutate(term = recode(term, !!!term_labels)) |>
-  gt() |>
-  tab_header(
-    title = md("**Table 02. Multilevel Models of Age-Related Changes in Spouse and Parent Role Expectations**")) |>
-  cols_label(
-    term = "",
-    gdsp = md("**Spouse**"),
-    gdpa = md("**Parent**")) |>
-  tab_source_note(
-    md("\\* p < .05; \\** p < .01; \\*** p < .001")) |>
-  tab_options(
-    table.font.size = px(12),
-    data_row.padding = px(2)
-  )
-
-tbl02    
-
-# Export the table to word
-gtsave(
-  tbl02,
-  here("output", "Table2.docx")
-)
-
-
