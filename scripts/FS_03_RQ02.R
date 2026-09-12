@@ -17,10 +17,15 @@ coef_df <- tbl02 |>
   filter(statistic == "estimate") |>
   mutate(across(-c(term, statistic), as.numeric))
 
+## model names
+model_vars <- c("gdsp", "gdpa")
+
+## SE
 se_df <- tbl02 |>
   filter(statistic == "{std.error}") |>
   mutate(across(-c(term, statistic), as.numeric))
 
+## p values
 p_df <- tbl02 |>
   filter(statistic == "{p.value}")
 
@@ -83,7 +88,7 @@ term_labels <- c(
   "decades1970s"                = "\u00A0\u00A0\u00A01970s",
   "decades1980s"                = "\u00A0\u00A0\u00A01980s",
   "decades1990s"                = "\u00A0\u00A0\u00A01990s",
-  "decades2000s"                = "2000s",
+  "decades2000s"                = "\u00A0\u00A0\u00A02000s",
   "mom_ba"                      = "Rs mom had BA degree or more",
   "momwork"                     = "Rs mom mostly/always employed",
   "momdad"                      = "R lived w/ both mom & dad at BY",
