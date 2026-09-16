@@ -55,7 +55,7 @@ mtf_F2_list <- lapply(file.path(dataDir, form2dta), read.dta) # turn the list in
 #mtf_F2_list <- lapply(mtf_F2_list, labelled::remove_val_labels)
 
 mtfF2       <- rbindlist(mtf_F2_list, use.names=TRUE, fill=TRUE) # Convert the list of data frames into one data frame
-mtf_V2      <- select(mtfF2, V1, V5, V13, ARCHIVE_WT, TABLET, starts_with("V2")) ## Keep only Form 2 variables
+mtf_V2      <- select(mtfF2, V1, V5, V13, ARCHIVE_WT, RESPONDENT_AGE, TABLET, starts_with("V2")) ## Keep only Form 2 variables
 mtf_V2      <- subset(mtf_V2, !is.na(V2151)) ## Keep only Form 2 survey respondents
 
 remove(mtf_F2_list) # clean up global environment

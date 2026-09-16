@@ -366,3 +366,68 @@ gtsave(
   here("output", "Table4.docx")
 )
 
+# Visualize it -----------------------------------------------------------------
+
+df3_pp <- read_excel(
+  here("data", "FS_RQ03.xlsx"), 
+  sheet = "predictions",
+  skip = 1) 
+
+df3_pp <- df3_pp |>
+  mutate(
+    level = fct_case_when(
+      level == 1 ~ "Poor",
+      level == 2 ~ "Not so good",
+      level == 3 ~ "Fairly good",
+      level == 4 ~ "Good",
+      level == 5 ~ "Very good"))
+
+df3_pp$outcome <- factor(df3_pp$outcome, levels = c("ever_mar", "mar_at", "now_mar", "parent", "numkids"))
+
+
+## Make the figure
+p2 <- df3_pp |>
+  filter(parameter == "intercept") |>
+  ggplot(
+    aes(x = wave, y = estimate, 
+         fill = factor(level), 
+         group = level,
+        ymin = conf.low, ymax = conf.high)) +
+  geom_col(
+    position = position_dodge(width = .8)) +
+  geom_errorbar(
+    position = position_dodge(width = .8), width = .2, color = "grey80") +
+  facet_wrap(
+    vars(outcome),
+    scales = "free_y",
+    labeller = labeller(
+      outcome = c(
+        ever_mar = "Ever Married",
+        now_mar  = "Currently Married",
+        parent   = "Parenting",
+        numkids  = "Number of Children<br><span style='color:grey70;'>different y-axis</span>"))) +
+  facetted_pos_scales(
+    y = list(
+      outcome == "numkids" ~ scale_y_continuous(limits = c(0, 3)),
+      outcome != "numkids" ~ scale_y_continuous(limits = c(0, 1), 
+                                                labels = label_percent())
+      )) +
+  theme_minimal(10) +
+  theme(
+    strip.text = ggtext::element_markdown(size = 11, face = "bold")) +
+  scale_fill_manual(
+    values = rev(c("#18BC9C", "#3498DB", "#9966FF", "#F39C12", "#e74c3c"))) +
+  labs(
+    x = "Age (modal)",
+    y = NULL,
+    fill = "Expectations\n(at modal age 18)")
+
+p2
+
+## Save Fig 2
+agg_png(filename = file.path(here(outDir, figDir), "fig2.png"), 
+        width=6, height=4, units="in", res = 800, scaling = 1)
+
+plot(p2)
+invisible(dev.off())
+

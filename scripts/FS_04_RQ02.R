@@ -1,19 +1,19 @@
 #-------------------------------------------------------------------------------
 # FS Project
-# FS_03_RQ02_VDE.R
+# FS_04_RQ02_VDE.R
 # Joanna R. Pepin
 #-------------------------------------------------------------------------------
 
 # Do expectations change over the life course (18-30)?
 
-tbl02 <- read_excel(
+tbl03 <- read_excel(
   here("data", "FS_RQ02.xlsx"), 
   sheet = "mods03",
   skip = 1) |>
   select(-c(part, gdwk)) 
 
 # Split into coefficients, SEs, and p-values
-coef_df <- tbl02 |>
+coef_df <- tbl03 |>
   filter(statistic == "estimate") |>
   mutate(across(-c(term, statistic), as.numeric))
 
@@ -21,12 +21,12 @@ coef_df <- tbl02 |>
 model_vars <- c("gdsp", "gdpa")
 
 ## SE
-se_df <- tbl02 |>
+se_df <- tbl03 |>
   filter(statistic == "{std.error}") |>
   mutate(across(-c(term, statistic), as.numeric))
 
 ## p values
-p_df <- tbl02 |>
+p_df <- tbl03 |>
   filter(statistic == "{p.value}")
 
 # create the coefficient rows
@@ -132,16 +132,16 @@ tbl_display <- bind_rows(
   race_row,
   tbl_display[race_pos:(re_pos - 1), ],
   re_row,
-  tbl_display[re_pos:nrow(tbl_display), ]
+  tbl_display[re_pos:nrow(tbl_display),]
 )
 
 
 # create the table:
-tbl02 <- tbl_display |>
+tbl03 <- tbl_display |>
   mutate(term = recode(term, !!!term_labels)) |>
   gt() |>
   tab_header(
-    title = md("**Table 02. Multilevel Models of Age-Related Changes in Spouse and Parent Role Expectations**")) |>
+    title = md("**Table 03. Multilevel Models of Age-Related Changes in Spouse and Parent Role Expectations**")) |>
   cols_label(
     term = "",
     gdsp = md("**Spouse**"),
@@ -153,12 +153,35 @@ tbl02 <- tbl_display |>
     data_row.padding = px(2)
   )
 
-tbl02    
+tbl03    
 
 # Export the table to word
 gtsave(
-  tbl02,
-  here("output", "Table2.docx")
+  tbl03,
+  here("output", "Table3.docx")
 )
+
+# Visualize it -----------------------------------------------------------------
+
+df2_pp <- read_excel(
+  here("data", "FS_RQ02.xlsx"), 
+  sheet = "mods04_predict",
+  skip = 1) |>
+  filter(group != "Worker")
+
+df2_pp$group <- factor(df2_pp$group,
+                       levels = c("Spouse", "Parent"))
+
+df2_pp |>
+  ggplot(aes(x = age_c, y = estimate, color = sex)) +
+  geom_line(linewidth = 1) +
+  facet_wrap(~group) +
+  theme_minimal() +
+  scale_y_continuous(
+    breaks = c(0, 1, 2, 3, 4, 5),
+    limits = c(0, 5)) +
+  scale_x_continuous(
+    breaks = c(18,20,22,24,26,28,30)
+  )
 
 

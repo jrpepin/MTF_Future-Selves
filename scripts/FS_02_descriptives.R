@@ -9,20 +9,26 @@ mtf_svy$variables$race_char <- as.character(mtf_svy$variables$race) # avoiding w
 
 tab1 <- mtf_svy |>
   gtsummary::select(c(gdsp, gdpa, gdwk,
-                      sex, momed, race_char, region)) |>
+                      sex, mom_ba, momwork, momdad, race_char, year)) |>
   tbl_svysummary(
     by = sex,
     #    type = list(c(happy_N_std, lifesat_N_std) ~ "continuous2"),
     type  = list(
-      c(momed) ~ "dichotomous"),
-    value = list(momed = "Completed college"),
+      c(mom_ba)  ~ "dichotomous",
+      c(momwork) ~ "dichotomous",
+      c(momdad)  ~ "dichotomous"),
+    value = list(
+      mom_ba  = "Completed college",
+      momwork = "Most or all the time",
+      momdad  = "Both Mother & Father"),
     label = list(
       gdsp            ~ "Expectations as spouse",
       gdpa            ~ "Expectations as parent",
       gdwk            ~ "Expectations as worker",
-      momed           ~ "Mom completed college",
-      race_char       ~ "Race identity",
-      region          ~ "Region"),
+      mom_ba          ~ "Mom completed college",
+      momwork         ~ "Mom employed most/all of the time",
+      momdad          ~ "Living with both parents",
+      race_char       ~ "Race identity"),
     statistic = list(
       all_continuous()  ~ "{median} ({p25}, {p75})",
       all_categorical() ~ "{n} {p}%"))  |>
@@ -43,4 +49,4 @@ tab1 <- mtf_svy |>
 
 tab1 # show table
 
-save_as_docx(tab1, path = file.path(outDir, "PS_table01.docx"))
+save_as_docx(tab1, path = file.path(outDir, "FS_table01.docx"))

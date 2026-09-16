@@ -27,6 +27,8 @@ pacman::p_load(
   MASS,            # ologits
   marginaleffects, # average marginal effects
   ggeffects,       # predicted probabilities
+  ggrepel,         # repel labels
+  ggh4x,           # control facet axis
   effects,         # required for ggeffects
   patchwork,       # combine sep facet plots
   ragg,            # save high quality plots
